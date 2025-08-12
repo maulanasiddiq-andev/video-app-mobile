@@ -30,9 +30,6 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
   final HistoryController historyController = Get.find<HistoryController>();
   final CommentController commentController = Get.find<CommentController>();
 
-  final ScrollController commentScrollController = ScrollController();
-  final TextEditingController commentFieldController = TextEditingController();
-
   VideoPlayerController? videoPlayerController;
 
   late AnimationController fadingController;
@@ -42,7 +39,6 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
   int fadingSecond = maxFadingSecond;
 
   final baseUri = ApiPoint.baseUrl;
-  Duration lastPosition = Duration();
 
   bool isCommentShowed = false;
 
@@ -61,12 +57,6 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
     fadingAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(fadingController);
 
     initVideo();
-
-    commentScrollController.addListener(() {
-      if (commentScrollController.position.pixels >= commentScrollController.position.maxScrollExtent - 10) {
-        commentController.loadMore();
-      }
-    });
   }
 
   @override
