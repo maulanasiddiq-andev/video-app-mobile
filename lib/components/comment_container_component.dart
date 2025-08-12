@@ -33,6 +33,12 @@ class _CommentContainerComponentState extends State<CommentContainerComponent> {
   @override
   void initState() {
     super.initState();
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 10) {
+        commentController.loadMore();
+      }
+    });
   }
 
   void onSubmitComment() {
@@ -93,16 +99,14 @@ class _CommentContainerComponentState extends State<CommentContainerComponent> {
                     );
                   }
                   
-                  return 
-                  commentController.isLoadingMore.value
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: Center(
-                        child: CircularProgressIndicator(color: Colors.blue),
-                      ),
-                    )
-                  : 
-                  SizedBox();
+                  return  commentController.isLoadingMore.value
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Center(
+                          child: CircularProgressIndicator(color: Colors.blue),
+                        ),
+                      )
+                    : SizedBox();
                 }
               );
             })
