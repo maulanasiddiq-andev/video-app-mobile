@@ -19,6 +19,8 @@ class CommentController extends GetxController {
 
   var isLoadingCreate = false.obs;
 
+  var editedComment = Rxn<CommentModel>();
+
   Future<void> getDatas(String videoId) async {
     storedVideoId = videoId;
 
@@ -75,7 +77,8 @@ class CommentController extends GetxController {
         user: user, 
         userId: user.id, 
         videoId: videoId, 
-        createdAt: DateTime.now()
+        createdAt: DateTime.now(),
+        isBeingEdited: true
       );
       comments.insert(0, newComment);
 
@@ -88,6 +91,34 @@ class CommentController extends GetxController {
       print(e.toString());
     } finally {
       isLoadingCreate(false);
+    }
+  }
+
+  void assignCommentForEdit(CommentModel comment) {
+    editedComment.value = comment;
+  }
+
+  Future<void> editData(String text) async {
+    try {
+      // find the comment which will be edited
+      final index = comments.indexWhere((comment) => comment.id == editedComment.value?.id);
+
+      if (index != -1) {
+        comments[index].isBeingEdited = true;
+        comments[index].text = text;
+
+        final result = await CommentService.editComment(editedComment.value!.id, text);
+        comments[index] = result.data!;
+
+        Fluttertoast.showToast(msg: result.messages[0]);
+      }
+    } on ApiException catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      print(e.toString());
+    } finally {
+      // set the edited comment to null
+      editedComment.value = null;
     }
   }
 

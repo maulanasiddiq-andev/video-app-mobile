@@ -78,6 +78,29 @@ class CommentService {
     return result;
   }
 
+  static Future<BaseResponse<CommentModel>> editComment(String commentId, String text) async {
+    final uri = Uri.parse('$url/$commentId');
+    var token = await storage.read(key: 'token');
+    final response = await http.put(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json'
+      }, 
+      body: jsonEncode({'text': text})
+    );
+
+    final responseJson = jsonDecode(response.body);
+    final BaseResponse<CommentModel> result = BaseResponse.fromJson(
+      responseJson, 
+      (data) => CommentModel.fromJson(data)
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+
   static Future<BaseResponse<CommentModel>> deleteComment(String id) async {
     final uri = Uri.parse('$url/$id');
     var token = await storage.read(key: 'token');

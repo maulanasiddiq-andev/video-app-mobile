@@ -28,10 +28,25 @@ class _CommentContainerComponentState extends State<CommentContainerComponent> {
   final ProfileController profileController = Get.find<ProfileController>();
   final ScrollController scrollController = ScrollController();
   final TextEditingController commentFieldController = TextEditingController();
+  final FocusNode commentNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
+  }
+
+  void onSubmitComment() {
+    var text = commentFieldController.text;
+    if (text.isEmpty) return;
+
+    if (commentController.editedComment.value == null) {
+      commentController.createData(text, widget.video.id, profileController.user.value!);
+    } else {
+      commentController.editData(text);
+    }
+
+    FocusScope.of(context).unfocus();
+    commentFieldController.clear();
   }
 
   @override
@@ -69,6 +84,11 @@ class _CommentContainerComponentState extends State<CommentContainerComponent> {
                       comment: comment,
                       onDelete: () {
                         commentController.deleteData(comment.id);
+                      },
+                      onEdit: () {
+                        commentFieldController.text = comment.text;
+                        commentController.assignCommentForEdit(comment);
+                        FocusScope.of(context).requestFocus(commentNode);
                       },
                     );
                   }
@@ -108,6 +128,7 @@ class _CommentContainerComponentState extends State<CommentContainerComponent> {
                 Expanded(
                   child: TextField(
                     controller: commentFieldController,
+                    focusNode: commentNode,
                     minLines: 1,
                     maxLines: 4,
                     onChanged: (value) {
@@ -120,27 +141,22 @@ class _CommentContainerComponentState extends State<CommentContainerComponent> {
                     ),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    var text = commentFieldController.text;
-                    if (text.isNotEmpty) {
-                      FocusScope.of(context).unfocus();
-                      commentController.createData(text, widget.video.id, profileController.user.value!);
-                      commentFieldController.clear();
-                    }
-                  },
-                  child: Obx(() {
-                    return commentController.isLoadingCreate.value
-                      ? SizedBox(
-                          height: 15,
-                          width: 15,
-                          child: Center(
-                            child: CircularProgressIndicator(color: Colors.blue, strokeWidth: 3),
-                          ),
-                        )
-                      : Icon(Icons.send, color: Colors.blue);
-                  })
-                )
+                Obx(() {
+                  return commentController.isLoadingCreate.value
+                    ? SizedBox(
+                        height: 15,
+                        width: 15,
+                        child: Center(
+                          child: CircularProgressIndicator(color: Colors.blue, strokeWidth: 3),
+                        ),
+                      )
+                    : GestureDetector(
+                        onTap: () {
+                          onSubmitComment();
+                        },
+                        child: Icon(Icons.send, color: Colors.blue)
+                      );
+                }),
               ],
             ),
           )

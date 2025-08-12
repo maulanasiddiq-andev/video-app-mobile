@@ -10,7 +10,8 @@ class CommentItemComponent extends StatelessWidget {
 
   final CommentModel comment;
   final Function? onDelete;
-  CommentItemComponent({super.key, required this.comment, this.onDelete});
+  final Function? onEdit;
+  CommentItemComponent({super.key, required this.comment, this.onDelete, this.onEdit});
 
   final String baseUrl = ApiPoint.baseUrl;
 
@@ -19,13 +20,14 @@ class CommentItemComponent extends StatelessWidget {
       context: context, 
       builder: (context) {
         return Container(
-          padding: EdgeInsets.symmetric(vertical: 15),
+          padding: EdgeInsets.symmetric(vertical: 5),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5)
           ),
           child: Wrap(
             children: [
               GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () {
                   Get.back();
                   if (onDelete != null) onDelete!();
@@ -37,6 +39,23 @@ class CommentItemComponent extends StatelessWidget {
                     children: [
                       Icon(Icons.delete),
                       Text('Hapus')
+                    ],
+                  ),  
+                ),
+              ),
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  Get.back();
+                  if (onEdit != null) onEdit!();
+                },
+                child: Padding(
+                  padding: EdgeInsetsGeometry.symmetric(vertical: 5, horizontal: 10),
+                  child: Row(
+                    spacing: 10,
+                    children: [
+                      Icon(Icons.edit),
+                      Text('Edit')
                     ],
                   ),  
                 ),
@@ -87,7 +106,7 @@ class CommentItemComponent extends StatelessWidget {
                 ],
               ),
             ),
-            comment.id == "temporary" 
+            comment.isBeingEdited 
               ? Center(
                   child: SizedBox(
                     height: 15,
