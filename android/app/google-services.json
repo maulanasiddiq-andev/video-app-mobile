@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "495345886054",
+    "project_id": "glowing-road-428204-i3",
+    "storage_bucket": "glowing-road-428204-i3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495345886054:android:3f23334aa6a3267c5b5ea7",
+        "android_client_info": {
+          "package_name": "com.example.video_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "495345886054-0ogd03dt1aoq6b8717qjs7rjl5uommvm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC04mH3LkRUuWmgCvTK3bV0OCCzzyRmgHk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "495345886054-0ogd03dt1aoq6b8717qjs7rjl5uommvm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
