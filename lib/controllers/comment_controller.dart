@@ -44,6 +44,8 @@ class CommentController extends GetxController {
       }
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
     } finally {
       isLoading(false);
       isLoadingMore(false);
@@ -88,7 +90,7 @@ class CommentController extends GetxController {
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     } catch (e) {
-      print(e.toString());
+      Fluttertoast.showToast(msg: e.toString());
     } finally {
       isLoadingCreate(false);
     }
@@ -115,7 +117,7 @@ class CommentController extends GetxController {
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     } catch (e) {
-      print(e.toString());
+      Fluttertoast.showToast(msg: e.toString());
     } finally {
       // set the edited comment to null
       editedComment.value = null;
@@ -129,6 +131,8 @@ class CommentController extends GetxController {
 
       comments.value = comments.where((comment) => comment.id != id).toList();
     } on ApiException catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
   }

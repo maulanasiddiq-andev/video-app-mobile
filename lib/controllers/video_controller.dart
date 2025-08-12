@@ -57,6 +57,8 @@ class VideoController extends GetxController {
       
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
     } finally {
       isLoading(false);
       isLoadingMore(false);
@@ -93,6 +95,8 @@ class VideoController extends GetxController {
         firstComment.value = video.value?.comments[0]; 
       }
     } on ApiException catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     } finally {
       isDetailLoading(false);
@@ -132,7 +136,7 @@ class VideoController extends GetxController {
       if (pickedFile != null) {
         pickedVideo.value = File(pickedFile.path);
       } 
-    } on ApiException catch (e) {
+    } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
   }
@@ -153,6 +157,8 @@ class VideoController extends GetxController {
       Get.back();
       Fluttertoast.showToast(msg: result.messages[0]);
     } on ApiException catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     } finally {
       isLoadingCreate(false);
@@ -189,6 +195,8 @@ class VideoController extends GetxController {
       Get.back();
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
     } finally {
       isLoadingEdit(false);
     }
@@ -207,6 +215,9 @@ class VideoController extends GetxController {
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
 
+      return false;
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
       return false;
     } finally {
       isLoading(false);

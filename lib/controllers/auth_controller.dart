@@ -52,6 +52,8 @@ class AuthController extends GetxController {
       Get.offAll(() => RootPage());
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
     } finally {
       isLoading(false);
     }
@@ -92,6 +94,8 @@ class AuthController extends GetxController {
       Get.to(() => VerificationPage());
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
     } finally {
       isLoadingRegister(false);
     }
@@ -107,6 +111,8 @@ class AuthController extends GetxController {
       Get.offAll(() => LoginPage());
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
     } finally {
       isLoadingVerifyAccount(false);
     }
@@ -118,6 +124,8 @@ class AuthController extends GetxController {
 
       Fluttertoast.showToast(msg: result.messages[0]);
     } on ApiException catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
   }

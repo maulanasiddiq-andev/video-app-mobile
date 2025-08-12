@@ -36,6 +36,8 @@ class HistoryController extends GetxController {
       
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
     } finally {
       isLoading(false);
       isLoadingMore(false);
@@ -73,6 +75,8 @@ class HistoryController extends GetxController {
     try {
       await HistoryService.editHistory(videoId, position);
     } on ApiException catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
   }

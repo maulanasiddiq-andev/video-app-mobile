@@ -71,6 +71,8 @@ class ProfileController extends GetxController {
       Fluttertoast.showToast(msg: result.messages[0]);
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
     } finally {
       isLoadingEditImage(false);
     }
