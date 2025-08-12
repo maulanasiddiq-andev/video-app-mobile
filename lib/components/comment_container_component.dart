@@ -50,45 +50,42 @@ class _CommentContainerComponentState extends State<CommentContainerComponent> {
       child: Column(
         children: [
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-              child: Obx(() {
-                if (commentController.isLoading.value) {
-                  return Center(
-                    child: CircularProgressIndicator(color: Colors.blue),
-                  ); 
-                }
-              
-                return ListView.builder(
-                  padding: EdgeInsets.only(top: 15),
-                  controller: scrollController,
-                  itemCount: commentController.comments.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index < commentController.comments.length) {
-                      var comment = commentController.comments[index];
-                  
-                      return CommentItemComponent(
-                        comment: comment,
-                        onDelete: () {
-                          commentController.deleteData(comment.id);
-                        },
-                      );
-                    }
-      
-                    return 
-                    commentController.isLoadingMore.value
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Center(
-                          child: CircularProgressIndicator(color: Colors.blue),
-                        ),
-                      )
-                    : 
-                    SizedBox();
+            child: Obx(() {
+              if (commentController.isLoading.value) {
+                return Center(
+                  child: CircularProgressIndicator(color: Colors.blue),
+                ); 
+              }
+            
+              return ListView.builder(
+                padding: EdgeInsets.only(top: 15),
+                controller: scrollController,
+                itemCount: commentController.comments.length + 1,
+                itemBuilder: (context, index) {
+                  if (index < commentController.comments.length) {
+                    var comment = commentController.comments[index];
+                
+                    return CommentItemComponent(
+                      comment: comment,
+                      onDelete: () {
+                        commentController.deleteData(comment.id);
+                      },
+                    );
                   }
-                );
-              }),
-            )
+                  
+                  return 
+                  commentController.isLoadingMore.value
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Center(
+                        child: CircularProgressIndicator(color: Colors.blue),
+                      ),
+                    )
+                  : 
+                  SizedBox();
+                }
+              );
+            })
           ),
           Container(
             padding: EdgeInsets.fromLTRB(

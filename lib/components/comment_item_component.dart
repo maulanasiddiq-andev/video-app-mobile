@@ -53,7 +53,7 @@ class CommentItemComponent extends StatelessWidget {
     String formattedDate = formatDate(comment.createdAt);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 20),
       child: Row(
           spacing: 10,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,13 +88,16 @@ class CommentItemComponent extends StatelessWidget {
               ),
             ),
             comment.id == "temporary" 
-              ? SizedBox(
-                height: 15,
-                width: 15,
-                child: Center(
-                  child: CircularProgressIndicator(color: Colors.blue, strokeWidth: 3),
-                ),
-              )
+              ? Center(
+                  child: SizedBox(
+                    height: 15,
+                    width: 15,
+                    child: CircularProgressIndicator(
+                      color: Colors.blue, 
+                      strokeWidth: 3
+                    ),
+                  ),
+                )
               : profileController.user.value!.id == comment.userId
                 ? GestureDetector(
                     onTap: () {
