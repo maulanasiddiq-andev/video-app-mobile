@@ -2,12 +2,13 @@ import 'package:video_app/models/user_model.dart';
 
 class CommentModel {
   final String id;
-  final String text;
+  String text;
   final String recordStatus;
   final String userId;
   final String videoId;
   final UserModel user;
   final DateTime createdAt;
+  bool isBeingEdited;
 
   CommentModel({
     required this.id,
@@ -16,7 +17,8 @@ class CommentModel {
     required this.user,
     required this.userId,
     required this.videoId,
-    required this.createdAt
+    required this.createdAt,
+    required this.isBeingEdited
   });
 
   factory CommentModel.fromJson(Map<String, dynamic> json) => CommentModel(
@@ -26,7 +28,8 @@ class CommentModel {
     user: UserModel.fromJson(json['user']), 
     userId: json['user_id'], 
     videoId: json['video_id'],
-    createdAt: DateTime.parse(json['created_at']).toLocal()
+    createdAt: DateTime.parse(json['created_at']).toLocal(),
+    isBeingEdited: false
   );
 
   Map<String, dynamic> toJson() => {
