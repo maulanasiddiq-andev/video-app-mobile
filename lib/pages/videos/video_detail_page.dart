@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
@@ -66,6 +67,8 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
 
     videoPlayerController?.dispose();
     videoController.emptyFiles();
+
+    fadingTimer?.cancel();
 
     super.dispose();
   }
@@ -169,6 +172,11 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
     final statusBarHeight = MediaQuery.of(context).padding.top;
     final systemBottomHeight = MediaQuery.of(context).padding.bottom;
     final commentBoxHeight = screenHeight - videoHeight - statusBarHeight - systemBottomHeight;
+
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.blue,
+      statusBarIconBrightness: Brightness.light
+    ));
 
     return PopScope(
       canPop: !isCommentShowed,
