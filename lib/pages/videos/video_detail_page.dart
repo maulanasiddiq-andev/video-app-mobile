@@ -349,7 +349,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
                                 );
                               }
                     
-                              var count = widget.video.historiesCount;
+                              var count = widget.video.historiesCount ?? 0;
                               var viewText = count > 1 ? 'views' : 'view';
                                   
                               return Column(

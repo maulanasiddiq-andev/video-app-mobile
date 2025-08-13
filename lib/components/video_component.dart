@@ -36,7 +36,7 @@ class _VideoComponentState extends State<VideoComponent> {
 
     name = widget.video.user!.name;
 
-    viewCount = widget.video.historiesCount;
+    viewCount = widget.video.historiesCount ?? 0;
     viewText = viewCount > 0 ? 'views' : 'view';
   }
 

@@ -9,14 +9,14 @@ class VideoModel {
   final String recordStatus;
   final String userId;
   final UserModel? user;
-  final int commentsCount;
+  final int? commentsCount;
   final DateTime createdAt;
   final List<CommentModel> comments;
   final String? image;
   final String? video;
   final String? duration;
   HistoryModel? history;
-  final int historiesCount;
+  final int? historiesCount;
 
   VideoModel({
     required this.id,
