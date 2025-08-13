@@ -46,6 +46,7 @@ dependencies:
   image_cropper: ^9.1.0
   shimmer: ^3.0.0
   google_sign_in_android: ^7.0.3
+  flutter_slidable: ^4.0.0
 
 dev_dependencies:
   flutter_test:
