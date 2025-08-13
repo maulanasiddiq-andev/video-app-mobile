@@ -78,35 +78,6 @@ class HistoryService {
     return result;
   }
 
-  static Future<BaseResponse<HistoryModel>> editHistory(int videoId, String position) async {
-    final uri = Uri.parse('$url/$videoId');
-
-    final body = {
-      'position': position
-    };
-    final encodedBody = jsonEncode(body);
-
-    var token = await storage.read(key: 'token');
-    final response = await http.put(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json'
-      },
-      body: encodedBody
-    );
-
-    final responseJson = jsonDecode(response.body);
-    final BaseResponse<HistoryModel> result = BaseResponse.fromJson(
-      responseJson, 
-      (data) => HistoryModel.fromJson(data)
-    );
-
-    if (result.succeed == false) throw ApiException(result.messages[0]);
-
-    return result;
-  }
-
   static Future<BaseResponse<HistoryModel>> deleteHistory(String historyId) async {
     final uri = Uri.parse('$url/$historyId');
 

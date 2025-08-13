@@ -78,16 +78,6 @@ class HistoryController extends GetxController {
     }
   }
 
-  Future<void> editHistory(int videoId, String position) async {
-    try {
-      await HistoryService.editHistory(videoId, position);
-    } on ApiException catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-    } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-    }
-  }
-
   Future<void> deleteData(HistoryModel deletedHistory) async {
     isLoadingMore(true);
     try {
