@@ -6,6 +6,7 @@ class HistoryModel {
   final String videoId;
   final String duration;
   final String position;
+  final String recordStatus;
   final DateTime createdAt;
   final VideoModel? video;
 
@@ -16,6 +17,7 @@ class HistoryModel {
     required this.duration,
     required this.position,
     required this.createdAt,
+    required this.recordStatus,
     this.video
   });
 
@@ -26,6 +28,7 @@ class HistoryModel {
     duration: json['duration'], 
     position: json['position'],
     createdAt: DateTime.parse(json['created_at']).toLocal(),
-    video: json['video'] != null ? VideoModel.fromJson(json['video']) : null
+    video: json['video'] != null ? VideoModel.fromJson(json['video']) : null,
+    recordStatus: json['record_status']
   );
 }
