@@ -5,13 +5,15 @@ import 'package:video_app/models/base_response.dart';
 import 'package:video_app/models/history_model.dart';
 import 'package:video_app/models/search_response.dart';
 import 'package:video_app/services/history_service.dart';
+import 'package:video_app/utils/format_date.dart';
 
 class HistoryController extends GetxController {
   var isLoading = false.obs;
   var isLoadingMore = false.obs;
   var isRefreshing = false.obs;
-  var videos = <HistoryModel>[].obs;
-  var pageSize = 5;
+  var histories = <HistoryModel>[].obs;
+  var historiesByDate = Rxn<Map<String, List<HistoryModel>>>({});
+  var pageSize = 10;
   var page = 1;
   var hasNextPage = false;
 
@@ -28,7 +30,11 @@ class HistoryController extends GetxController {
       if (result.data != null) {
         var items = result.data!.items;
         for (var item in items) {
-          videos.add(item);
+          // histories.add(item);
+          var date = formatDate(item.createdAt);
+          
+          historiesByDate.value?.putIfAbsent(date, () => []);
+          historiesByDate.value![date]?.add(item);
         }
 
         hasNextPage = result.data!.hasNextPage;
@@ -55,7 +61,8 @@ class HistoryController extends GetxController {
 
   Future<void> refreshData() async {
     page = 1;
-    videos.clear();
+    histories.clear();
+    historiesByDate.value = {};
     isRefreshing(true);
 
     await getHistories();
@@ -78,6 +85,34 @@ class HistoryController extends GetxController {
       Fluttertoast.showToast(msg: e.toString());
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  Future<void> deleteData(HistoryModel deletedHistory) async {
+    isLoadingMore(true);
+    try {
+      final result = await HistoryService.deleteHistory(deletedHistory.id);
+
+      var date = formatDate(deletedHistory.createdAt);
+
+      // delete history from the container
+      histories.remove(deletedHistory);
+
+      // delete history from shown data
+      var updatedHistory = historiesByDate.value![date];
+      updatedHistory!.remove(deletedHistory);
+      historiesByDate.value![date] = [...updatedHistory];
+      historiesByDate.value!.removeWhere((key, value) => value.isEmpty);
+
+      Fluttertoast.showToast(msg: result.messages[0]);
+
+      if (histories.length < pageSize) loadMore();
+    } on ApiException catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    } finally {
+      isLoadingMore(false);
     }
   }
 }

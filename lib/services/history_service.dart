@@ -30,7 +30,6 @@ class HistoryService {
     );
 
     final dynamic responseJson = jsonDecode(response.body);
-
     final BaseResponse<SearchResponse<HistoryModel>> result = BaseResponse.fromJson(
       responseJson, 
       (data) => SearchResponse.fromJson(
@@ -95,6 +94,28 @@ class HistoryService {
         'Content-Type': 'application/json'
       },
       body: encodedBody
+    );
+
+    final responseJson = jsonDecode(response.body);
+    final BaseResponse<HistoryModel> result = BaseResponse.fromJson(
+      responseJson, 
+      (data) => HistoryModel.fromJson(data)
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+
+  static Future<BaseResponse<HistoryModel>> deleteHistory(String historyId) async {
+    final uri = Uri.parse('$url/$historyId');
+
+    var token = await storage.read(key: 'token');
+    final response = await http.delete(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+      }
     );
 
     final responseJson = jsonDecode(response.body);
