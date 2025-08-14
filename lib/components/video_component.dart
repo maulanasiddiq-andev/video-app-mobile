@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:video_app/components/profile_image_component.dart';
 import 'package:video_app/components/video_option_bottom_sheet.dart';
 import 'package:video_app/constants/env.dart';
 import 'package:video_app/models/video_model.dart';
@@ -8,8 +9,13 @@ import 'package:video_app/utils/convert_duration.dart';
 
 class VideoComponent extends StatefulWidget {
   final VideoModel video;
+  final Function goToDetail;
 
-  const VideoComponent({super.key, required this.video});
+  const VideoComponent({
+    super.key, 
+    required this.video,
+    required this.goToDetail  
+  });
 
   @override
   State<VideoComponent> createState() => _VideoComponentState();
@@ -116,11 +122,11 @@ class _VideoComponentState extends State<VideoComponent> {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 10,
               children: [
-                CircleAvatar(
-                  radius: 15,
-                  backgroundImage: widget.video.user?.profileImage == null
-                    ? AssetImage('assets/images/profile.png')
-                    : NetworkImage('$uri${widget.video.user!.profileImage}'),
+                GestureDetector(
+                  onTap: () => widget.goToDetail(),
+                  child: ProfileImageComponent(
+                    profileImage: widget.video.user?.profileImage,
+                  ),
                 ),
                 Expanded(
                   child: Column(

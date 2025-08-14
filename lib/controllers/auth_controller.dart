@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:video_app/controllers/comment_controller.dart';
 import 'package:video_app/controllers/history_controller.dart';
 import 'package:video_app/controllers/profile_controller.dart';
+import 'package:video_app/controllers/user_detail_controller.dart';
 import 'package:video_app/controllers/video_controller.dart';
 import 'package:video_app/exceptions/api_exception.dart';
 import 'package:video_app/models/base_response.dart';
@@ -181,6 +182,10 @@ class AuthController extends GetxController {
     if (!Get.isRegistered<CommentController>()) {
       Get.lazyPut(() => CommentController(), fenix: true);
     }
+    
+    if (!Get.isRegistered<UserDetailController>()) {
+      Get.lazyPut(() => UserDetailController(), fenix: true);
+    }
   }
 
   void deleteController() {
@@ -198,6 +203,10 @@ class AuthController extends GetxController {
     
     if (Get.isRegistered<CommentController>()) {
       Get.delete<CommentController>();
+    }
+    
+    if (Get.isRegistered<UserDetailController>()) {
+      Get.delete<UserDetailController>();
     }
   }
 }

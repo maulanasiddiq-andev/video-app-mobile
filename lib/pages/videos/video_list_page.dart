@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_app/components/video_component.dart';
 import 'package:video_app/controllers/video_controller.dart';
+import 'package:video_app/pages/user/user_detail_page.dart';
 import 'package:video_app/pages/videos/video_create_page.dart';
 
 class VideoListPage extends StatefulWidget {
@@ -76,7 +77,10 @@ class _VideoListPageState extends State<VideoListPage> {
                   ),
                 ),
                 ...videos.map((video) {
-                  return VideoComponent(video: video);
+                  return VideoComponent(
+                    video: video,
+                    goToDetail: () => Get.to(() => UserDetailPage(user: video.user!)),  
+                  );
                 }),
                 Obx(() {
                   var isLoadingMore = videoController.isLoadingMore.value;
