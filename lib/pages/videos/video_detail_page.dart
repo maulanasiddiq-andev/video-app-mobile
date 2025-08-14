@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:video_app/components/comment_container_component.dart';
+import 'package:video_app/components/profile_image_component.dart';
 import 'package:video_app/constants/env.dart';
 import 'package:video_app/controllers/comment_controller.dart';
 import 'package:video_app/controllers/history_controller.dart';
@@ -406,9 +407,8 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
                                   Row(
                                     spacing: 10,
                                     children: [
-                                      CircleAvatar(
-                                        radius: 15,
-                                        backgroundImage: AssetImage('assets/images/profile.png'),
+                                      ProfileImageComponent(
+                                        profileImage: widget.video.user?.profileImage,
                                       ),
                                       Text(widget.video.user!.name),
                                       Expanded(
@@ -445,18 +445,14 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
                                             ),
                                           ),
                                           Obx(() {
-                                            CommentModel? comment =
-                                                videoController.firstComment.value;
+                                            CommentModel? comment = videoController.firstComment.value;
                                     
                                             if (comment != null) {
                                               return Row(
                                                 spacing: 10,
                                                 children: [
-                                                  CircleAvatar(
-                                                    radius: 15,
-                                                    backgroundImage: AssetImage(
-                                                      'assets/images/profile.png',
-                                                    ),
+                                                  ProfileImageComponent(
+                                                    profileImage: comment.user.profileImage,
                                                   ),
                                                   Expanded(
                                                     child: Text(

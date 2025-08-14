@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:video_app/components/profile_image_component.dart';
 import 'package:video_app/constants/env.dart';
 import 'package:video_app/controllers/profile_controller.dart';
 import 'package:video_app/models/comment_model.dart';
@@ -77,11 +78,8 @@ class CommentItemComponent extends StatelessWidget {
           spacing: 10,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(
-              radius: 15,
-              backgroundImage: comment.user.profileImage != null
-                ? NetworkImage('$baseUrl${comment.user.profileImage}')
-                : AssetImage('assets/images/profile.png',),
+            ProfileImageComponent(
+              profileImage: comment.user.profileImage,
             ),
             Expanded(
               child: Column(

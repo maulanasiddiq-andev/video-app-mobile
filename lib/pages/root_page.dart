@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:video_app/components/profile_image_component.dart';
 import 'package:video_app/constants/env.dart';
 import 'package:video_app/controllers/profile_controller.dart';
 import 'package:video_app/pages/histories/histories_list_page.dart';
@@ -66,11 +67,9 @@ class _RootPageState extends State<RootPage> {
             icon: Obx(() {
               var imageUrl = profileController.user.value?.profileImage;
 
-              return CircleAvatar(
-                radius: 13,
-                backgroundImage: imageUrl != null
-                  ? NetworkImage('$baseUri$imageUrl')
-                  : AssetImage('assets/images/profile.png'),
+              return ProfileImageComponent(
+                profileImage: imageUrl,
+                radius: 11,
               );
             }),
             label: menu.title
