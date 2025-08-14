@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:video_app/controllers/auth_controller.dart';
 import 'package:video_app/pages/auth/login_page.dart';
 import 'package:video_app/pages/root_page.dart';
 import 'package:video_app/pages/splash_page.dart';
 
-void main() {
+void main() async {
+  await dotenv.load(fileName: ".env");
   runApp(MyApp());
 }
 

@@ -11,7 +11,7 @@ import 'package:video_app/models/search_response.dart';
 
 class CommentService {
   static const storage = FlutterSecureStorage();
-  static const String url = '${ApiPoint.url}comment';
+  static String url = '${ApiPoint.url}comment';
 
   static Future<BaseResponse<SearchResponse<CommentModel>>> getComments(
     String videoId,

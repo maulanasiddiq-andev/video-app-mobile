@@ -9,7 +9,7 @@ import 'package:video_app/models/search_response.dart';
 
 class HistoryService {
   static const storage = FlutterSecureStorage();
-  static const String url = '${ApiPoint.url}history';
+  static String url = '${ApiPoint.url}history';
 
   static Future<BaseResponse<SearchResponse<HistoryModel>>> getHistories(
     int page,

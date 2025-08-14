@@ -12,7 +12,7 @@ import 'package:video_app/utils/convert_media_type.dart';
 
 class VideoService {
   static const storage = FlutterSecureStorage();
-  static const String url = '${ApiPoint.url}video';
+  static String url = '${ApiPoint.url}video';
   
   static Future<BaseResponse<SearchResponse<VideoModel>>> getVideos(
     int page,

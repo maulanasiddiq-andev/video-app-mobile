@@ -9,7 +9,7 @@ import 'package:video_app/models/user_model.dart';
 
 class AuthService {
   static const storage = FlutterSecureStorage();
-  static const url = ApiPoint.url;
+  static String url = ApiPoint.url;
 
   static Future<BaseResponse<TokenModel>> login(String email, String password) async {
     final baseUri = Uri.parse('${url}login');

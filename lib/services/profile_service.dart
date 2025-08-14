@@ -11,7 +11,7 @@ import 'package:video_app/models/base_response.dart';
 
 class ProfileService {
   static const storage = FlutterSecureStorage();
-  static const String url = '${ApiPoint.url}profile';
+  static String url = '${ApiPoint.url}profile';
 
   static Future<BaseResponse<UserModel>> editProfileImage(
     UserModel? user,
