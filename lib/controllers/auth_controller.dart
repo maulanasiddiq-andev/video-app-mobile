@@ -4,7 +4,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:video_app/constants/env.dart';
 import 'package:video_app/controllers/comment_controller.dart';
 import 'package:video_app/controllers/history_controller.dart';
 import 'package:video_app/controllers/profile_controller.dart';
@@ -20,7 +19,6 @@ import 'package:video_app/services/auth_service.dart';
 
 class AuthController extends GetxController {
   var storage = FlutterSecureStorage();
-  var url = ApiPoint.url;
 
   var isAuthenticated = false.obs;
 

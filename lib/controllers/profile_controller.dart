@@ -6,14 +6,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:video_app/constants/env.dart';
 import 'package:video_app/exceptions/api_exception.dart';
 import 'package:video_app/models/base_response.dart';
 import 'package:video_app/models/user_model.dart';
 import 'package:video_app/services/profile_service.dart';
 
 class ProfileController extends GetxController {
-  final baseUri = '${ApiPoint.url}profile';
   final storage = FlutterSecureStorage();
   var user = Rxn<UserModel>();
 
