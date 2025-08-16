@@ -124,7 +124,8 @@ class _CommentContainerComponentState extends State<CommentContainerComponent> {
                   color: Colors.black,
                   width: 1
                 )
-              )
+              ),
+              color: Colors.white
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
