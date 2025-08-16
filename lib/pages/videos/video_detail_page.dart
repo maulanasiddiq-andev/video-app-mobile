@@ -445,7 +445,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
                                             ),
                                           ),
                                           Obx(() {
-                                            CommentModel? comment = videoController.firstComment.value;
+                                            CommentModel? comment = videoController.video.value?.comment;
                                     
                                             if (comment != null) {
                                               return Row(
