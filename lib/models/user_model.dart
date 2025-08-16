@@ -1,12 +1,10 @@
-import 'package:video_app/models/video_model.dart';
-
 class UserModel {
   final String id;
   final String name;
   final String username;
   final String email;
   final String recordStatus;
-  final List<VideoModel> videos;
+  final int? videosCount;
   String? profileImage;
 
   UserModel({
@@ -15,7 +13,7 @@ class UserModel {
     required this.username,
     required this.email,
     required this.recordStatus,
-    required this.videos,
+    this.videosCount,
     this.profileImage
   });
 
@@ -24,9 +22,9 @@ class UserModel {
     name: json['name'], 
     username: json['username'], 
     email: json['email'], 
-    recordStatus: json['record_status'], 
-    videos: json['videos'] ?? [],
-    profileImage: json['profile_image']
+    recordStatus: json['recordStatus'],
+    profileImage: json['profileImage'],
+    videosCount: json['videosCount']
   );
 
   Map<String, dynamic> toJson() => {
@@ -34,7 +32,8 @@ class UserModel {
     'name': name,
     'username': username,
     'email': email,
-    'record_status': recordStatus,
-    'profile_image': profileImage
+    'recordStatus': recordStatus,
+    'profileImage': profileImage,
+    'videosCount': videosCount
   };
 }

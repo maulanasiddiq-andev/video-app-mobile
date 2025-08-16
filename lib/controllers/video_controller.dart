@@ -91,9 +91,6 @@ class VideoController extends GetxController {
       final BaseResponse<VideoModel> result = await VideoService.getVideoById(id);
 
       video.value = result.data;
-      if (video.value!.comments.isNotEmpty) {
-        firstComment.value = video.value?.comments[0]; 
-      }
     } on ApiException catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     } catch (e) {

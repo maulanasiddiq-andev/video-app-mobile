@@ -18,12 +18,12 @@ class SearchResponse<T> {
   });
 
   factory SearchResponse.fromJson(Map<String, dynamic> json, T Function(Map<String, dynamic>)  fromJsonT) => SearchResponse(
-    currentPage: json['current_page'], 
-    hasNextPage: json['has_next_page'], 
-    hasPreviousPage: json['has_previous_page'], 
+    currentPage: json['currentPage'], 
+    hasNextPage: json['hasNextPage'], 
+    hasPreviousPage: json['hasPreviousPage'], 
     items: (json['items'] as List).map((data) => fromJsonT(data)).toList(), 
-    pageSize: json['page_size'], 
-    totalItem: json['total_item'], 
-    totalPages: json['total_pages'],
+    pageSize: json['pageSize'], 
+    totalItem: json['totalItem'], 
+    totalPages: json['totalPages'],
   );
 }

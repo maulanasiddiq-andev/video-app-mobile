@@ -23,12 +23,12 @@ class HistoryModel {
 
   factory HistoryModel.fromJson(Map<String, dynamic> json) => HistoryModel(
     id: json['id'], 
-    userId: json['user_id'], 
-    videoId: json['video_id'], 
+    userId: json['userId'], 
+    videoId: json['videoId'], 
     duration: json['duration'], 
     position: json['position'],
-    createdAt: DateTime.parse(json['created_at']).toLocal(),
+    createdAt: DateTime.parse(json['createdAt']).toLocal(),
     video: json['video'] != null ? VideoModel.fromJson(json['video']) : null,
-    recordStatus: json['record_status']
+    recordStatus: json['recordStatus']
   );
 }

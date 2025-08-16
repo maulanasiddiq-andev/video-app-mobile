@@ -11,11 +11,11 @@ class VideoModel {
   final UserModel? user;
   final int? commentsCount;
   final DateTime createdAt;
-  final List<CommentModel> comments;
+  final CommentModel? comment;
   final String? image;
   final String? video;
   final String? duration;
-  HistoryModel? history;
+  final HistoryModel? history;
   final int? historiesCount;
 
   VideoModel({
@@ -27,7 +27,7 @@ class VideoModel {
     this.user,
     required this.commentsCount,
     required this.createdAt,
-    required this.comments,
+    this.comment,
     this.image,
     this.video,
     this.duration,
@@ -39,17 +39,17 @@ class VideoModel {
     id: json['id'], 
     title: json['title'], 
     description: json['description'], 
-    recordStatus: json['record_status'], 
-    userId: json['user_id'],
+    recordStatus: json['recordStatus'], 
+    userId: json['userId'],
     user: UserModel.fromJson(json['user']),
-    commentsCount: json['comments_count'],
-    comments: json['comments'] == null ? [] : (json['comments'] as List).map((data) => CommentModel.fromJson(data)).toList(),
-    createdAt: DateTime.parse(json['created_at']).toLocal(),
+    commentsCount: json['commentsCount'],
+    comment: json['comment'] != null ? CommentModel.fromJson(json['comment']) : null,
+    createdAt: DateTime.parse(json['createdAt']).toLocal(),
     image: json['image'],
     video: json['video'],
     duration: json['duration'],
-    history:json['history'] != null ? HistoryModel.fromJson(json['history']) : null,
-    historiesCount: json['histories_count']
+    history: json['history'] != null ? HistoryModel.fromJson(json['history']) : null,
+    historiesCount: json['historiesCount']
   );
 
   Map<String, dynamic> toJson() => {
