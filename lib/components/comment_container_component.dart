@@ -52,7 +52,7 @@ class _CommentContainerComponentState extends State<CommentContainerComponent> {
       videoDetailController.editComment(text);
     }
 
-    FocusScope.of(context).unfocus();
+    commentNode.unfocus();
     commentFieldController.clear();
   }
 
