@@ -7,9 +7,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:video_app/components/comment_container_component.dart';
 import 'package:video_app/components/profile_image_component.dart';
 import 'package:video_app/constants/env.dart';
-import 'package:video_app/controllers/comment_controller.dart';
-import 'package:video_app/controllers/history_controller.dart';
-import 'package:video_app/controllers/video_controller.dart';
+import 'package:video_app/controllers/video_detail_controller.dart';
 import 'package:video_app/models/comment_model.dart';
 import 'package:video_app/models/video_model.dart';
 import 'package:video_app/utils/convert_duration.dart';
@@ -28,9 +26,7 @@ class VideoDetailPage extends StatefulWidget {
 class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProviderStateMixin {
   static int maxFadingSecond = 4;
 
-  final VideoController videoController = Get.find<VideoController>();
-  final HistoryController historyController = Get.find<HistoryController>();
-  final CommentController commentController = Get.find<CommentController>();
+  final VideoDetailController videoDetailController = Get.find<VideoDetailController>();
 
   VideoPlayerController? videoPlayerController;
 
@@ -67,7 +63,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
     saveHistory(position);
 
     videoPlayerController?.dispose();
-    videoController.emptyFiles();
+    videoDetailController.emptyFiles();
 
     fadingTimer?.cancel();
 
@@ -75,8 +71,8 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
   }
 
   Future<void> initVideo() async {
-    await videoController.getVideoById(widget.video.id);
-    var video = videoController.video.value;
+    await videoDetailController.getVideoById(widget.video.id);
+    var video = videoDetailController.video.value;
 
     if (widget.video.video != null) {
       final uri = Uri.parse(baseUri + widget.video.video!);
@@ -152,13 +148,13 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
     var convertedPosition = convertDurationToString(position);
 
     if (convertedPosition != "00:00") {
-      historyController.createHistory(widget.video.id, widget.video.duration!, convertedPosition);
+      videoDetailController.createHistory(widget.video.id, widget.video.duration!, convertedPosition);
     }
   }
 
   void toggleShowComments(BuildContext context) {
-    if (commentController.comments.isEmpty) {
-      commentController.getDatas(widget.video.id);
+    if (videoDetailController.comments.isEmpty) {
+      videoDetailController.getComments(widget.video.id);
     }
     
     setState(() {
@@ -196,7 +192,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
                 child: AspectRatio(
                   aspectRatio: 16/9,
                   child: Obx(() {
-                    var isLoading = videoController.isDetailLoading.value;
+                    var isLoading = videoDetailController.isLoading.value;
           
                     if (isLoading) {
                       return Center(
@@ -317,7 +313,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: Obx(() {
-                              var isLoading = videoController.isDetailLoading.value;
+                              var isLoading = videoDetailController.isLoading.value;
                                   
                               if (isLoading) {
                                 return Shimmer.fromColors(
@@ -445,7 +441,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
                                             ),
                                           ),
                                           Obx(() {
-                                            CommentModel? comment = videoController.video.value?.comment;
+                                            CommentModel? comment = videoDetailController.video.value?.comment;
                                     
                                             if (comment != null) {
                                               return Row(

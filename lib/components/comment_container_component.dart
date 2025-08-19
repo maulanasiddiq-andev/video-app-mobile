@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_app/components/comment_item_component.dart';
-import 'package:video_app/controllers/comment_controller.dart';
 import 'package:video_app/controllers/profile_controller.dart';
+import 'package:video_app/controllers/video_detail_controller.dart';
 import 'package:video_app/models/video_model.dart';
 
 class CommentContainerComponent extends StatefulWidget {
@@ -24,8 +24,9 @@ class CommentContainerComponent extends StatefulWidget {
 }
 
 class _CommentContainerComponentState extends State<CommentContainerComponent> {
-  final CommentController commentController = Get.find<CommentController>();
+  final VideoDetailController videoDetailController = Get.find<VideoDetailController>();
   final ProfileController profileController = Get.find<ProfileController>();
+  
   final ScrollController scrollController = ScrollController();
   final TextEditingController commentFieldController = TextEditingController();
   final FocusNode commentNode = FocusNode();
@@ -36,7 +37,7 @@ class _CommentContainerComponentState extends State<CommentContainerComponent> {
 
     scrollController.addListener(() {
       if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 10) {
-        commentController.loadMore();
+        videoDetailController.loadMoreComment();
       }
     });
   }
@@ -45,10 +46,10 @@ class _CommentContainerComponentState extends State<CommentContainerComponent> {
     var text = commentFieldController.text;
     if (text.isEmpty) return;
 
-    if (commentController.editedComment.value == null) {
-      commentController.createData(text, widget.video.id, profileController.user.value!);
+    if (videoDetailController.editedComment.value == null) {
+      videoDetailController.createComment(text, widget.video.id, profileController.user.value!);
     } else {
-      commentController.editData(text);
+      videoDetailController.editComment(text);
     }
 
     FocusScope.of(context).unfocus();
@@ -72,7 +73,7 @@ class _CommentContainerComponentState extends State<CommentContainerComponent> {
         children: [
           Expanded(
             child: Obx(() {
-              if (commentController.isLoading.value) {
+              if (videoDetailController.isLoadingComment.value) {
                 return Center(
                   child: CircularProgressIndicator(color: Colors.blue),
                 ); 
@@ -81,25 +82,25 @@ class _CommentContainerComponentState extends State<CommentContainerComponent> {
               return ListView.builder(
                 padding: EdgeInsets.only(top: 15),
                 controller: scrollController,
-                itemCount: commentController.comments.length + 1,
+                itemCount: videoDetailController.comments.length + 1,
                 itemBuilder: (context, index) {
-                  if (index < commentController.comments.length) {
-                    var comment = commentController.comments[index];
+                  if (index < videoDetailController.comments.length) {
+                    var comment = videoDetailController.comments[index];
                 
                     return CommentItemComponent(
                       comment: comment,
                       onDelete: () {
-                        commentController.deleteData(comment.id);
+                        videoDetailController.deleteComment(comment.id);
                       },
                       onEdit: () {
                         commentFieldController.text = comment.text;
-                        commentController.assignCommentForEdit(comment);
+                        videoDetailController.assignCommentForEdit(comment);
                         FocusScope.of(context).requestFocus(commentNode);
                       },
                     );
                   }
                   
-                  return  commentController.isLoadingMore.value
+                  return  videoDetailController.isLoadingMoreComments.value
                     ? Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         child: Center(
@@ -147,7 +148,7 @@ class _CommentContainerComponentState extends State<CommentContainerComponent> {
                   ),
                 ),
                 Obx(() {
-                  return commentController.isLoadingCreate.value
+                  return videoDetailController.isLoadingCreateComment.value
                     ? SizedBox(
                         height: 15,
                         width: 15,

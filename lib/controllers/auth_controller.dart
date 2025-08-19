@@ -9,6 +9,7 @@ import 'package:video_app/controllers/history_controller.dart';
 import 'package:video_app/controllers/profile_controller.dart';
 import 'package:video_app/controllers/user_detail_controller.dart';
 import 'package:video_app/controllers/video_controller.dart';
+import 'package:video_app/controllers/video_detail_controller.dart';
 import 'package:video_app/exceptions/api_exception.dart';
 import 'package:video_app/models/base_response.dart';
 import 'package:video_app/models/token_model.dart';
@@ -186,6 +187,10 @@ class AuthController extends GetxController {
     if (!Get.isRegistered<UserDetailController>()) {
       Get.lazyPut(() => UserDetailController(), fenix: true);
     }
+    
+    if (!Get.isRegistered<VideoDetailController>()) {
+      Get.lazyPut(() => VideoDetailController(), fenix: true);
+    }
   }
 
   void deleteController() {
@@ -207,6 +212,10 @@ class AuthController extends GetxController {
     
     if (Get.isRegistered<UserDetailController>()) {
       Get.delete<UserDetailController>();
+    }
+    
+    if (Get.isRegistered<VideoDetailController>()) {
+      Get.delete<VideoDetailController>();
     }
   }
 }
