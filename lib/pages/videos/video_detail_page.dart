@@ -40,13 +40,9 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
 
   bool isCommentShowed = false;
 
-  late final String formattedDate;
-
   @override
   void initState() {
     super.initState();
-
-    formattedDate = formatDate(widget.video.createdAt);
 
     fadingController = AnimationController(
       vsync: this,
@@ -55,6 +51,8 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
     fadingAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(fadingController);
 
     initVideo();
+
+    videoDetailController.getLatestComment(widget.video.id);
   }
 
   @override
@@ -63,7 +61,6 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
     saveHistory(position);
 
     videoPlayerController?.dispose();
-    videoDetailController.emptyFiles();
 
     fadingTimer?.cancel();
 
@@ -71,8 +68,8 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
   }
 
   Future<void> initVideo() async {
-    await videoDetailController.getVideoById(widget.video.id);
-    var video = videoDetailController.video.value;
+    // await videoDetailController.getVideoById(widget.video.id);
+    var video = widget.video;
 
     if (widget.video.video != null) {
       final uri = Uri.parse(baseUri + widget.video.video!);
@@ -82,7 +79,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
         await videoPlayerController?.initialize();
 
         setState(() {
-          if (video != null && video.history != null) {
+          if (video.history != null) {
             // if the user has watched the video before
             Duration position = convertStringToDuration(video.history?.position);
 
@@ -164,6 +161,8 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
 
   @override
   Widget build(BuildContext context) {
+    final String formattedDate = formatDate(widget.video.createdAt);
+
     final screenHeight = MediaQuery.of(context).size.height;
     final videoHeight = (MediaQuery.of(context).size.width / 16) * 9;
     final statusBarHeight = MediaQuery.of(context).padding.top;
@@ -313,7 +312,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: Obx(() {
-                              var isLoading = videoDetailController.isLoading.value;
+                              var isLoading = videoDetailController.isLoadingLatestComment.value;
                                   
                               if (isLoading) {
                                 return Shimmer.fromColors(
@@ -441,7 +440,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
                                             ),
                                           ),
                                           Obx(() {
-                                            CommentModel? comment = videoDetailController.video.value?.comment;
+                                            CommentModel? comment = videoDetailController.latestComment.value;
                                     
                                             if (comment != null) {
                                               return Row(
