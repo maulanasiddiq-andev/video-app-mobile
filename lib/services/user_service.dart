@@ -15,30 +15,27 @@ class UserService {
   static Future<BaseResponse<SearchResponse<VideoModel>>> getUserVideos(
     String id,
     int pageSize,
-    int page
+    int page,
   ) async {
     final baseUri = Uri.parse('$url/$id/get-videos');
-    final uri = baseUri.replace(queryParameters: {
-      'page_size': pageSize.toString(),
-      'page': page.toString()
-    });
+    final uri = baseUri.replace(
+      queryParameters: {
+        'pageSize': pageSize.toString(),
+        'page': page.toString(),
+      },
+    );
     final token = await storage.read(key: 'token');
 
     final response = await http.get(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Accept': 'application/json'
-      }
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
     );
 
     final responseJson = jsonDecode(response.body);
     final result = BaseResponse.fromJson(
-      responseJson, 
-      (data) => SearchResponse.fromJson(
-        data, 
-        (item) => VideoModel.fromJson(item)
-      )
+      responseJson,
+      (data) =>
+          SearchResponse.fromJson(data, (item) => VideoModel.fromJson(item)),
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
@@ -49,30 +46,27 @@ class UserService {
   static Future<BaseResponse<SearchResponse<CommentModel>>> getUserComments(
     String id,
     int pageSize,
-    int page
+    int page,
   ) async {
     final baseUri = Uri.parse('$url/$id/get-comments');
-    final uri = baseUri.replace(queryParameters: {
-      'page_size': pageSize.toString(),
-      'page': page.toString()
-    });
+    final uri = baseUri.replace(
+      queryParameters: {
+        'pageSize': pageSize.toString(),
+        'page': page.toString(),
+      },
+    );
     final token = await storage.read(key: 'token');
 
     final response = await http.get(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Accept': 'application/json'
-      }
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
     );
 
     final responseJson = jsonDecode(response.body);
     final result = BaseResponse.fromJson(
-      responseJson, 
-      (data) => SearchResponse.fromJson(
-        data, 
-        (item) => CommentModel.fromJson(item)
-      )
+      responseJson,
+      (data) =>
+          SearchResponse.fromJson(data, (item) => CommentModel.fromJson(item)),
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);

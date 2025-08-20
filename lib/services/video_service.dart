@@ -13,35 +13,35 @@ import 'package:video_app/utils/convert_media_type.dart';
 class VideoService {
   static const storage = FlutterSecureStorage();
   static String url = '${ApiPoint.url}video';
-  
+
   static Future<BaseResponse<SearchResponse<VideoModel>>> getVideos(
     int page,
-    int pageSize
+    int pageSize,
   ) async {
     final baseUri = Uri.parse(url);
-    final uri = baseUri.replace(queryParameters: {
-      'page': page.toString(),
-      'page_size': pageSize.toString()
-    });
+    final uri = baseUri.replace(
+      queryParameters: {
+        'page': page.toString(),
+        'pageSize': pageSize.toString(),
+      },
+    );
 
     var token = await storage.read(key: 'token');
     final response = await http.get(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Accept': 'application/json'
-      }  
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
     );
 
     final dynamic responseJson = jsonDecode(response.body);
 
-    final BaseResponse<SearchResponse<VideoModel>> result = BaseResponse.fromJson(
-      responseJson, 
-      (data) => SearchResponse.fromJson(
-        data, 
-        (item) => VideoModel.fromJson(item)
-      )
-    );
+    final BaseResponse<SearchResponse<VideoModel>> result =
+        BaseResponse.fromJson(
+          responseJson,
+          (data) => SearchResponse.fromJson(
+            data,
+            (item) => VideoModel.fromJson(item),
+          ),
+        );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
 
@@ -52,16 +52,13 @@ class VideoService {
     final token = await storage.read(key: 'token');
     final response = await http.get(
       Uri.parse('$url/$id'),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Accept': 'application/json'
-      }  
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
     );
 
     final dynamic responseJson = jsonDecode(response.body);
     final BaseResponse<VideoModel> result = BaseResponse.fromJson(
-      responseJson, 
-      (data) => VideoModel.fromJson(data)
+      responseJson,
+      (data) => VideoModel.fromJson(data),
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
@@ -74,7 +71,7 @@ class VideoService {
     String description,
     File? image,
     File? video,
-    String duration
+    String duration,
   ) async {
     var token = await storage.read(key: 'token');
     final uri = Uri.parse(url);
@@ -82,32 +79,32 @@ class VideoService {
     var request = http.MultipartRequest('POST', uri);
     request.headers.addAll({
       'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
+      'Authorization': 'Bearer $token',
     });
 
     request.fields.addAll({
       'title': title,
       'description': description,
-      'record_status': RecordstatusConstant.active
+      'record_status': RecordstatusConstant.active,
     });
 
     if (image != null) {
       request.files.add(
         await http.MultipartFile.fromPath(
-          'image', 
+          'image',
           image.path,
-          contentType: convertPathToMediaType(image.path)
-        )
-      ); 
+          contentType: convertPathToMediaType(image.path),
+        ),
+      );
     }
 
     if (video != null) {
       request.files.add(
         await http.MultipartFile.fromPath(
-          'video', 
+          'video',
           video.path,
-          contentType: convertPathToMediaType(video.path)
-        )
+          contentType: convertPathToMediaType(video.path),
+        ),
       );
 
       request.fields['duration'] = duration;
@@ -118,8 +115,8 @@ class VideoService {
     final responseJson = jsonDecode(response);
 
     var result = BaseResponse.fromJson(
-      responseJson, 
-      (data) => VideoModel.fromJson(data)
+      responseJson,
+      (data) => VideoModel.fromJson(data),
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
@@ -135,7 +132,7 @@ class VideoService {
     String? oldImage,
     File? newVideo,
     String? oldVideo,
-    String duration
+    String duration,
   ) async {
     var token = await storage.read(key: 'token');
     final uri = Uri.parse('$url/${videoId.toString()}');
@@ -144,7 +141,7 @@ class VideoService {
     var request = http.MultipartRequest('POST', uri);
     request.headers.addAll({
       'Accept': 'application/json',
-      'Authorization': 'Bearer $token'
+      'Authorization': 'Bearer $token',
     });
 
     // '_method': 'PUT' make the api consider POST as PUT
@@ -152,7 +149,7 @@ class VideoService {
       'title': title,
       'description': description,
       'record_status': RecordstatusConstant.active,
-      '_method': 'PUT'
+      '_method': 'PUT',
     };
 
     request.fields.addAll(body);
@@ -160,11 +157,11 @@ class VideoService {
     if (newImage != null) {
       request.files.add(
         await http.MultipartFile.fromPath(
-          'image', 
+          'image',
           newImage.path,
-          contentType: convertPathToMediaType(newImage.path)
-        )
-      ); 
+          contentType: convertPathToMediaType(newImage.path),
+        ),
+      );
     } else {
       if (oldImage != null) request.fields['image'] = oldImage;
     }
@@ -172,10 +169,10 @@ class VideoService {
     if (newVideo != null) {
       request.files.add(
         await http.MultipartFile.fromPath(
-          'video', 
+          'video',
           newVideo.path,
-          contentType: convertPathToMediaType(newVideo.path)
-        )
+          contentType: convertPathToMediaType(newVideo.path),
+        ),
       );
     } else {
       if (oldVideo != null) {
@@ -190,8 +187,8 @@ class VideoService {
     final responseJson = jsonDecode(response);
 
     var result = BaseResponse.fromJson(
-      responseJson, 
-      (data) => VideoModel.fromJson(data)
+      responseJson,
+      (data) => VideoModel.fromJson(data),
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
@@ -203,16 +200,13 @@ class VideoService {
     final token = await storage.read(key: 'token');
     final response = await http.delete(
       Uri.parse('$url/$id'),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Accept': 'application/json'
-      }  
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
     );
 
     final dynamic responseJson = jsonDecode(response.body);
     final BaseResponse<VideoModel> result = BaseResponse.fromJson(
-      responseJson, 
-      (data) => VideoModel.fromJson(data)
+      responseJson,
+      (data) => VideoModel.fromJson(data),
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);

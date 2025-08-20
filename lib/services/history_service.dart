@@ -13,31 +13,31 @@ class HistoryService {
 
   static Future<BaseResponse<SearchResponse<HistoryModel>>> getHistories(
     int page,
-    int pageSize
+    int pageSize,
   ) async {
     final baseUri = Uri.parse(url);
-    final uri = baseUri.replace(queryParameters: {
-      'page': page.toString(),
-      'page_size': pageSize.toString()
-    });
+    final uri = baseUri.replace(
+      queryParameters: {
+        'page': page.toString(),
+        'pageSize': pageSize.toString(),
+      },
+    );
 
     var token = await storage.read(key: 'token');
     final response = await http.get(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Accept': 'application/json'
-      }  
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
     );
 
     final dynamic responseJson = jsonDecode(response.body);
-    final BaseResponse<SearchResponse<HistoryModel>> result = BaseResponse.fromJson(
-      responseJson, 
-      (data) => SearchResponse.fromJson(
-        data, 
-        (item) => HistoryModel.fromJson(item)
-      )
-    );
+    final BaseResponse<SearchResponse<HistoryModel>> result =
+        BaseResponse.fromJson(
+          responseJson,
+          (data) => SearchResponse.fromJson(
+            data,
+            (item) => HistoryModel.fromJson(item),
+          ),
+        );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
 
@@ -47,14 +47,14 @@ class HistoryService {
   static Future<BaseResponse<HistoryModel>> createHistory(
     String videoId,
     String duration,
-    String position
+    String position,
   ) async {
     final uri = Uri.parse(url);
 
     final body = {
       'video_id': videoId,
       'duration': duration,
-      'position': position
+      'position': position,
     };
     final encodedBody = jsonEncode(body);
 
@@ -64,15 +64,15 @@ class HistoryService {
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
       },
-      body: encodedBody
+      body: encodedBody,
     );
 
     final responseJson = jsonDecode(response.body);
     final BaseResponse<HistoryModel> result = BaseResponse.fromJson(
-      responseJson, 
-      (data) => HistoryModel.fromJson(data)
+      responseJson,
+      (data) => HistoryModel.fromJson(data),
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
@@ -80,22 +80,21 @@ class HistoryService {
     return result;
   }
 
-  static Future<BaseResponse<HistoryModel>> deleteHistory(String historyId) async {
+  static Future<BaseResponse<HistoryModel>> deleteHistory(
+    String historyId,
+  ) async {
     final uri = Uri.parse('$url/$historyId');
 
     var token = await storage.read(key: 'token');
     final response = await http.delete(
       uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Accept': 'application/json'
-      }
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
     );
 
     final responseJson = jsonDecode(response.body);
     final BaseResponse<HistoryModel> result = BaseResponse.fromJson(
-      responseJson, 
-      (data) => HistoryModel.fromJson(data)
+      responseJson,
+      (data) => HistoryModel.fromJson(data),
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
