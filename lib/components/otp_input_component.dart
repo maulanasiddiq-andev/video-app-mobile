@@ -3,12 +3,18 @@ import 'package:flutter/services.dart';
 
 class OtpInputComponent extends StatelessWidget {
   final TextEditingController controller;
+  final FocusNode focusNode;
+  final bool autoFocus;
   final Function(String value) onChange;
+  final Function onPrevious;
 
   const OtpInputComponent({
     super.key,
     required this.controller,
-    required this.onChange
+    required this.focusNode,
+    this.autoFocus = false,
+    required this.onChange,
+    required this.onPrevious
   });
 
   @override
@@ -21,24 +27,38 @@ class OtpInputComponent extends StatelessWidget {
         color: Colors.grey[200]
       ),
       child: Center(
-        child: TextField(
-          controller: controller,
-          textAlign: TextAlign.center,
-          keyboardType: TextInputType.number,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            isDense: true,
-          ),
-          style: TextStyle(
-            fontSize: 25
-          ),
-          inputFormatters: [
-            LengthLimitingTextInputFormatter(1),
-            FilteringTextInputFormatter.digitsOnly
-          ],
-          onChanged: (value) {
-            onChange(value);
+        child: Focus(
+          onKeyEvent: (node, event) {
+            if (
+              event is KeyDownEvent &&
+              event.logicalKey == LogicalKeyboardKey.backspace &&
+              controller.text.isEmpty
+            ) {
+              onPrevious();
+            }
+            return KeyEventResult.ignored;
           },
+          child: TextField(
+            controller: controller,
+            focusNode: focusNode,
+            autofocus: autoFocus,
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              isDense: true,
+            ),
+            style: TextStyle(
+              fontSize: 25
+            ),
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(1),
+              FilteringTextInputFormatter.digitsOnly
+            ],
+            onChanged: (value) {
+              onChange(value);
+            },
+          ),
         ),
       ),
     );

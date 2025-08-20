@@ -15,10 +15,8 @@ class _VerificationPageState extends State<VerificationPage> {
   static final maxSeconds = 15 * 60;
 
   final AuthController authController = Get.find<AuthController>();
-  final TextEditingController firstCharacter = TextEditingController();
-  final TextEditingController secondCharacter = TextEditingController();
-  final TextEditingController thirdCharacter = TextEditingController();
-  final TextEditingController fourthCharacter = TextEditingController();
+  final List<TextEditingController> controllers = List.generate(4, (_) => TextEditingController());
+  final List<FocusNode> focusNodes = List.generate(4, (_) => FocusNode());
   int seconds = maxSeconds;
   Timer? timer;
 
@@ -62,15 +60,14 @@ class _VerificationPageState extends State<VerificationPage> {
   }
 
   void onSubmitOtpCode() {
-    String first = firstCharacter.value.text;
-    String second = secondCharacter.value.text;
-    String third = thirdCharacter.value.text;
-    String fourth = fourthCharacter.value.text;
+    String otpCode = '';
 
-    String otpCode = '$first$second$third$fourth';
+    for (var c in controllers) {
+      otpCode += c.text;
+      c.text = '';
+    }
 
     authController.verifyAccount(otpCode);
-    print(otpCode);
   }
 
   @override
@@ -131,51 +128,33 @@ class _VerificationPageState extends State<VerificationPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          OtpInputComponent(
-                            controller: firstCharacter,
-                            onChange: (value) {
-                              if (value.length == 1) {
-                                FocusScope.of(context).nextFocus();
-                              }
-                            },
-                          ),
-                          OtpInputComponent(
-                            controller: secondCharacter,
-                            onChange: (value) {
-                              if (value.length == 1) {
-                                FocusScope.of(context).nextFocus();
-                              }
+                          ...controllers.asMap().entries.map((c) {
+                            var controller = c.value;
+                            var index = c.key;
 
-                              if (value.isEmpty) {
-                                FocusScope.of(context).previousFocus();
-                              }
-                            },
-                          ),
-                          OtpInputComponent(
-                            controller: thirdCharacter,
-                            onChange: (value) {
-                              if (value.length == 1) {
-                                FocusScope.of(context).nextFocus();
-                              }
-
-                              if (value.isEmpty) {
-                                FocusScope.of(context).previousFocus();
-                              }
-                            },
-                          ),
-                          OtpInputComponent(
-                            controller: fourthCharacter,
-                            onChange: (value) {
-                              if (value.length == 1) {
-                                FocusScope.of(context).unfocus();
-                                onSubmitOtpCode();
-                              }
-
-                              if (value.isEmpty) {
-                                FocusScope.of(context).previousFocus();
-                              }
-                            },
-                          ),
+                            return OtpInputComponent(
+                              controller: controller,
+                              focusNode: focusNodes[index],
+                              autoFocus: index < 1,
+                              onChange: (value) {
+                                if (value.length == 1) {
+                                  if (index < 3) {
+                                    focusNodes[index + 1].requestFocus();
+                                  } else {
+                                    focusNodes[index].unfocus();
+                                    onSubmitOtpCode();
+                                  }
+                                }
+                              },
+                              onPrevious: () {
+                                if (index > 0) {
+                                  focusNodes[index - 1].requestFocus();
+                                  controllers[index - 1].text = '';
+                                }
+                              },
+                            );
+                          })
+                          ,
                         ],
                       ),
                       SizedBox(height: 40),
