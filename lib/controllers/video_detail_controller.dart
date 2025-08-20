@@ -1,5 +1,6 @@
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:video_app/constants/record_status_constant.dart';
 import 'package:video_app/exceptions/api_exception.dart';
 import 'package:video_app/models/base_response.dart';
 import 'package:video_app/models/comment_model.dart';
@@ -42,6 +43,24 @@ class VideoDetailController extends GetxController {
     }
   }
 
+  var isLoadingLatestComment = false.obs;
+  var latestComment = Rxn<CommentModel>();
+  Future<void> getLatestComment(String videoId) async {
+    isLoadingLatestComment(true);
+
+    try {
+      var result = await VideoService.getLatestComment(videoId);
+
+      latestComment.value = result.data;
+    } on ApiException catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    } finally {
+      isLoadingLatestComment(false);
+    }
+  }
+
   Future<void> getComments(String id) async {
     videoId = id;
 
@@ -52,7 +71,7 @@ class VideoDetailController extends GetxController {
     }
 
     try {
-      final BaseResponse<SearchResponse<CommentModel>> result = await CommentService.getComments(videoId, page, pageSize);        
+      final BaseResponse<SearchResponse<CommentModel>> result = await VideoService.getComments(videoId, page, pageSize);        
 
       if (result.data !=  null) {
         var items = result.data!.items;
@@ -89,7 +108,7 @@ class VideoDetailController extends GetxController {
       CommentModel newComment = CommentModel(
         id: "temporary", 
         text: text, 
-        recordStatus: "active", 
+        recordStatus: RecordstatusConstant.active, 
         user: user, 
         userId: user.id, 
         videoId: videoId, 
@@ -159,9 +178,5 @@ class VideoDetailController extends GetxController {
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
-  }
-
-  void emptyFiles() {
-    video.value = null;
   }
 }
