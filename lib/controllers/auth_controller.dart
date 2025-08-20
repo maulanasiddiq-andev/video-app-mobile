@@ -4,7 +4,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:video_app/controllers/comment_controller.dart';
 import 'package:video_app/controllers/history_controller.dart';
 import 'package:video_app/controllers/profile_controller.dart';
 import 'package:video_app/controllers/user_detail_controller.dart';
@@ -180,10 +179,6 @@ class AuthController extends GetxController {
       Get.lazyPut(() => HistoryController(), fenix: true);
     }
     
-    if (!Get.isRegistered<CommentController>()) {
-      Get.lazyPut(() => CommentController(), fenix: true);
-    }
-    
     if (!Get.isRegistered<UserDetailController>()) {
       Get.lazyPut(() => UserDetailController(), fenix: true);
     }
@@ -204,10 +199,6 @@ class AuthController extends GetxController {
 
     if (Get.isRegistered<HistoryController>()) {
       Get.delete<HistoryController>();
-    }
-    
-    if (Get.isRegistered<CommentController>()) {
-      Get.delete<CommentController>();
     }
     
     if (Get.isRegistered<UserDetailController>()) {
