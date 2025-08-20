@@ -70,14 +70,6 @@ class HistoryController extends GetxController {
     isRefreshing(false);
   }
 
-  Future<void> createHistory(String videoId, String duration, String position) async {
-    try {
-      await HistoryService.createHistory(videoId, duration, position);
-    } on ApiException catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-    }
-  }
-
   Future<void> deleteData(HistoryModel deletedHistory) async {
     isLoadingMore(true);
     try {
