@@ -27,7 +27,8 @@ class UserService {
     final response = await http.get(
       uri,
       headers: {
-        'Authorization': 'Bearer $token'
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json'
       }
     );
 
@@ -60,7 +61,8 @@ class UserService {
     final response = await http.get(
       uri,
       headers: {
-        'Authorization': 'Bearer $token'
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json'
       }
     );
 

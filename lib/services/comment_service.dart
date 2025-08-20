@@ -61,7 +61,8 @@ class CommentService {
       uri,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token'
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json'
       },  
       body: jsonEncode(body)
     );
@@ -85,7 +86,8 @@ class CommentService {
       uri,
       headers: {
         'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       }, 
       body: jsonEncode({'text': text})
     );
@@ -107,7 +109,8 @@ class CommentService {
     final response = await http.delete(
       uri,
       headers: {
-        'Authorization': 'Bearer $token'
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json'
       }, 
     );
 

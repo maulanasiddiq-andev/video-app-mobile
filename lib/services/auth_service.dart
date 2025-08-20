@@ -17,7 +17,10 @@ class AuthService {
 
     final response = await http.post(
       baseUri,
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
       body: body
     );
 
@@ -44,7 +47,8 @@ class AuthService {
     final response = await http.post(
       baseUri,
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
       body: jsonEncode(body)
     );
@@ -71,7 +75,8 @@ class AuthService {
     final response = await http.post(
       baseUrl,
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
       body: jsonEncode(body)
     );
@@ -93,7 +98,8 @@ class AuthService {
     final response = await http.post(
       baseUrl,
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
       body: jsonEncode({'user_id': userId})
     );

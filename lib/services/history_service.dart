@@ -25,7 +25,8 @@ class HistoryService {
     final response = await http.get(
       uri,
       headers: {
-        'Authorization': 'Bearer $token'
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json'
       }  
     );
 
@@ -62,7 +63,8 @@ class HistoryService {
       uri,
       headers: {
         'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
       body: encodedBody
     );
@@ -86,6 +88,7 @@ class HistoryService {
       uri,
       headers: {
         'Authorization': 'Bearer $token',
+        'Accept': 'application/json'
       }
     );
 

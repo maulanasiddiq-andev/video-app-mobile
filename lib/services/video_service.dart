@@ -28,7 +28,8 @@ class VideoService {
     final response = await http.get(
       uri,
       headers: {
-        'Authorization': 'Bearer $token'
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json'
       }  
     );
 
@@ -52,7 +53,8 @@ class VideoService {
     final response = await http.get(
       Uri.parse('$url/$id'),
       headers: {
-        'Authorization': 'Bearer $token'
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json'
       }  
     );
 
@@ -202,7 +204,8 @@ class VideoService {
     final response = await http.delete(
       Uri.parse('$url/$id'),
       headers: {
-        'Authorization': 'Bearer $token'
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json'
       }  
     );
 
