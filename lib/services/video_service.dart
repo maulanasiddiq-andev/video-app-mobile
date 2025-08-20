@@ -6,6 +6,7 @@ import 'package:video_app/constants/env.dart';
 import 'package:video_app/constants/record_status_constant.dart';
 import 'package:video_app/exceptions/api_exception.dart';
 import 'package:video_app/models/base_response.dart';
+import 'package:video_app/models/comment_model.dart';
 import 'package:video_app/models/search_response.dart';
 import 'package:video_app/models/video_model.dart';
 import 'package:video_app/utils/convert_media_type.dart';
@@ -207,6 +208,52 @@ class VideoService {
     final BaseResponse<VideoModel> result = BaseResponse.fromJson(
       responseJson,
       (data) => VideoModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+
+  static Future<BaseResponse<CommentModel>> getLatestComment(String videoId) async {
+    final token = await storage.read(key: 'token');
+    final response = await http.get(
+      Uri.parse('$url/$videoId/latest-comment'),
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+    );
+
+    final dynamic responseJson = jsonDecode(response.body);
+    final BaseResponse<CommentModel> result = BaseResponse.fromJson(
+      responseJson,
+      (data) => CommentModel.fromJson(data),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
+  
+  static Future<BaseResponse<SearchResponse<CommentModel>>> getComments(String videoId, int page, int pageSize) async {
+    final token = await storage.read(key: 'token');
+    final baseUri = Uri.parse('$url/$videoId/comments');
+    final uri = baseUri.replace(
+      queryParameters: {
+        'pageSize': pageSize.toString(),
+        'page': page.toString()
+      }
+    );
+    final response = await http.get(
+      uri,
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+    );
+
+    final dynamic responseJson = jsonDecode(response.body);
+    final BaseResponse<SearchResponse<CommentModel>> result = BaseResponse.fromJson(
+      responseJson,
+      (data) => SearchResponse.fromJson(
+        data, 
+        (item) => CommentModel.fromJson(item)
+      ),
     );
 
     if (result.succeed == false) throw ApiException(result.messages[0]);
