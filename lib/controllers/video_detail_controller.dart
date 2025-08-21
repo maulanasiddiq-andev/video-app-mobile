@@ -15,14 +15,6 @@ class VideoDetailController extends GetxController {
   var isLoading = false.obs;
   var video = Rxn<VideoModel>();
 
-  late String videoId;
-  var isLoadingComment = false.obs;
-  var isLoadingMoreComments = false.obs;
-  var comments = <CommentModel>[].obs;
-  int page = 1;
-  int pageSize = 10;
-  bool hasNextPage = false;
-
   var isLoadingCreateComment = false.obs;
 
   var editedComment = Rxn<CommentModel>();
@@ -61,11 +53,18 @@ class VideoDetailController extends GetxController {
     }
   }
 
-  Future<void> getComments(String id) async {
-    videoId = id;
+  var isLoadingComments = false.obs;
+  var isLoadingMoreComments = false.obs;
+  var comments = <CommentModel>[].obs;
+  int page = 1;
+  int pageSize = 10;
+  bool hasNextPage = true;
+
+  Future<void> getComments(String videoId) async {
+    if (hasNextPage == false) return;
 
     if (page == 1) {
-      isLoadingComment(true);
+      isLoadingComments(true);
     } else {
       isLoadingMoreComments(true);
     }
@@ -87,17 +86,10 @@ class VideoDetailController extends GetxController {
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     } finally {
-      isLoadingComment(false);
+      isLoadingComments(false);
       isLoadingMoreComments(false);
-    }
-  }
 
-  Future<void> loadMoreComment() async {
-    if (isLoadingComment.value == true || isLoadingMoreComments.value == true) return;
-
-    if (hasNextPage) {
       page++;
-      await getComments(videoId); 
     }
   }
 
@@ -177,6 +169,44 @@ class VideoDetailController extends GetxController {
       Fluttertoast.showToast(msg: e.toString());
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  var isLoadingSuggestedVideos = false.obs;
+  var isLoadingMoreSuggestedVideos = false.obs;
+  var suggestedVideos = <VideoModel>[].obs;
+  int suggestedVideosPageSize = 3;
+  int suggestedVideosPage = 1;
+  bool suggestedVideosHasNextPage = true;
+
+  Future<void> getSuggestedVideos(String videoId) async {
+    if (suggestedVideosHasNextPage == false) return;
+
+    if (suggestedVideosPage == 1) {
+      isLoadingSuggestedVideos(true);
+    } else {
+      isLoadingMoreSuggestedVideos(true);
+    }
+
+    try {
+      var result = await VideoService.getSuggestedVideos(videoId, suggestedVideosPage, suggestedVideosPageSize);
+
+      if (result.data != null) {
+        for (var item in result.data!.items) {
+          suggestedVideos.add(item);
+        }
+
+        suggestedVideosHasNextPage = result.data!.hasNextPage;
+      }
+    } on ApiException catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    } finally {
+      isLoadingSuggestedVideos(false);
+      isLoadingMoreSuggestedVideos(false);
+
+      suggestedVideosPage++;
     }
   }
 }

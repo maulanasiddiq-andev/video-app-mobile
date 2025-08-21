@@ -260,4 +260,32 @@ class VideoService {
 
     return result;
   }
+
+  static Future<BaseResponse<SearchResponse<VideoModel>>> getSuggestedVideos(String videoId, int page, int pageSize) async {
+    final token = await storage.read(key: 'token');
+    final baseUri = Uri.parse('$url/$videoId/suggested-videos');
+    final uri = baseUri.replace(
+      queryParameters: {
+        'pageSize': pageSize.toString(),
+        'page': page.toString()
+      }
+    );
+    final response = await http.get(
+      uri,
+      headers: {'Authorization': 'Bearer $token', 'Accept': 'application/json'},
+    );
+
+    final dynamic responseJson = jsonDecode(response.body);
+    final BaseResponse<SearchResponse<VideoModel>> result = BaseResponse.fromJson(
+      responseJson,
+      (data) => SearchResponse.fromJson(
+        data, 
+        (item) => VideoModel.fromJson(item)
+      ),
+    );
+
+    if (result.succeed == false) throw ApiException(result.messages[0]);
+
+    return result;
+  }
 }

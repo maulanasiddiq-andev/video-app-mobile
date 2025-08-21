@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:video_app/components/comment_container_component.dart';
 import 'package:video_app/components/profile_image_component.dart';
+import 'package:video_app/components/suggested_videos_container.dart';
 import 'package:video_app/components/video_player_component.dart';
 import 'package:video_app/controllers/video_detail_controller.dart';
 import 'package:video_app/models/comment_model.dart';
@@ -21,6 +22,7 @@ class VideoDetailPage extends StatefulWidget {
 
 class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProviderStateMixin {
   final VideoDetailController videoDetailController = Get.find<VideoDetailController>();
+  final ScrollController suggestedVideosScrollController = ScrollController();
   bool isCommentShowed = false;
 
   @override
@@ -28,6 +30,15 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
     super.initState();
 
     videoDetailController.getLatestComment(widget.video.id);
+    videoDetailController.getSuggestedVideos(widget.video.id);
+
+    suggestedVideosScrollController.addListener(() {
+      if (suggestedVideosScrollController.position.pixels >= suggestedVideosScrollController.position.maxScrollExtent - 10) {
+        if (!videoDetailController.isLoadingComments.value && !videoDetailController.isLoadingMoreComments.value) {
+          videoDetailController.getSuggestedVideos(widget.video.id);
+        }
+      }
+    });
   }
 
   void toggleShowComments(BuildContext context) {
@@ -93,6 +104,7 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
                 child: Stack(
                   children: [
                     SingleChildScrollView(
+                      controller: suggestedVideosScrollController,
                       child: Column(
                         children: [
                           SizedBox(height: 10),
@@ -257,6 +269,19 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
                               );
                             }),
                           ),
+                          SuggestedVideosContainer(),
+                          Obx(() {
+                            if (videoDetailController.isLoadingMoreSuggestedVideos.value) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 15),
+                                child: Center(
+                                  child: CircularProgressIndicator(color: Colors.blue),
+                                ),
+                              );
+                            }
+
+                            return SizedBox();
+                          })
                         ],
                       ),
                     ),
