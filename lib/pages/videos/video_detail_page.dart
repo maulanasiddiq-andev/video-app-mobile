@@ -1,18 +1,14 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:video_app/components/comment_container_component.dart';
 import 'package:video_app/components/profile_image_component.dart';
-import 'package:video_app/constants/env.dart';
+import 'package:video_app/components/video_player_component.dart';
 import 'package:video_app/controllers/video_detail_controller.dart';
 import 'package:video_app/models/comment_model.dart';
 import 'package:video_app/models/video_model.dart';
-import 'package:video_app/utils/convert_duration.dart';
 import 'package:video_app/utils/format_date.dart';
-import 'package:video_player/video_player.dart';
 
 class VideoDetailPage extends StatefulWidget {
   final VideoModel video;
@@ -24,129 +20,14 @@ class VideoDetailPage extends StatefulWidget {
 }
 
 class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProviderStateMixin {
-  static int maxFadingSecond = 4;
-
   final VideoDetailController videoDetailController = Get.find<VideoDetailController>();
-
-  VideoPlayerController? videoPlayerController;
-
-  late AnimationController fadingController;
-  late Animation<double> fadingAnimation;
-  bool isVideoOptionVisible = false;
-  Timer? fadingTimer;
-  int fadingSecond = maxFadingSecond;
-
-  final baseUri = ApiPoint.baseUrl;
-
   bool isCommentShowed = false;
 
   @override
   void initState() {
     super.initState();
 
-    fadingController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 200)
-    );
-    fadingAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(fadingController);
-
-    initVideo();
-
     videoDetailController.getLatestComment(widget.video.id);
-  }
-
-  @override
-  void dispose() {
-    final position = videoPlayerController?.value.position;
-    saveHistory(position);
-
-    videoPlayerController?.dispose();
-
-    fadingTimer?.cancel();
-
-    super.dispose();
-  }
-
-  Future<void> initVideo() async {
-    // await videoDetailController.getVideoById(widget.video.id);
-    var video = widget.video;
-
-    if (widget.video.video != null) {
-      final uri = Uri.parse(baseUri + widget.video.video!);
-      videoPlayerController = VideoPlayerController.networkUrl(uri);
-
-      try {
-        await videoPlayerController?.initialize();
-
-        setState(() {
-          if (video.history != null) {
-            // if the user has watched the video before
-            Duration position = convertStringToDuration(video.history?.position);
-
-            videoPlayerController?.seekTo(position);
-            videoPlayerController?.play();
-          } else {
-            // the user has not watched the video
-            videoPlayerController?.play();
-          }
-        }); 
-
-        videoPlayerController?.addListener(() {
-          setState(() {});
-        });
-      } catch (e) {
-        Fluttertoast.showToast(msg: e.toString());
-        Get.back();
-      }
-    }
-  }
-
-  void fadeVideoOptionIn() async {
-    fadingController.forward();
-    
-    setState(() {
-      isVideoOptionVisible = true;
-    });
-  }
-
-  void fadeVideoOptionOut() {
-    fadingController.reverse();
-
-    setState(() {
-      isVideoOptionVisible = false;
-    });
-  }
-
-  void startFadingTimer() {
-    fadeVideoOptionIn();
-    fadingTimer = Timer.periodic(Duration(seconds: 1), (_) {
-      if (fadingSecond > 0) {
-        setState(() => fadingSecond--);
-      } else {
-        fadingTimer?.cancel();
-        fadeVideoOptionOut();
-      }
-    });
-  }
-
-  void restartFadingTimer() {
-    fadingTimer?.cancel();
-    setState(() => fadingSecond = maxFadingSecond);
-    startFadingTimer();
-  }
-
-  void stopFadingTimer() {
-    fadingTimer?.cancel();
-    setState(() => fadingSecond = 0);
-    fadeVideoOptionOut();
-  }
-
-  void saveHistory(Duration? position) {
-    var convertedPosition = convertDurationToString(position);
-
-    if (convertedPosition != "00:00") {
-      videoDetailController.createHistory(widget.video.id, widget.video.duration!, convertedPosition);
-    }
   }
 
   void toggleShowComments(BuildContext context) {
@@ -199,106 +80,12 @@ class _VideoDetailPageState extends State<VideoDetailPage> with SingleTickerProv
                       );
                     }
           
-                    return videoPlayerController != null && videoPlayerController!.value.isInitialized 
-                    ? Stack(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              if (fadingTimer == null) {
-                                startFadingTimer();
-                              } else {
-                                restartFadingTimer();
-                              }
-                            },
-                            child: SizedBox(
-                              width: double.infinity,
-                              child: Center(
-                                child: AspectRatio(
-                                  aspectRatio: videoPlayerController!.value.aspectRatio,
-                                  child: VideoPlayer(videoPlayerController!),
-                                ),
-                              ),
-                            ),
-                          ),
-                          isVideoOptionVisible == true
-                          ? Positioned.fill(
-                              child: GestureDetector(
-                                behavior: HitTestBehavior.opaque,
-                                onTap: () {
-                                  stopFadingTimer();
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withAlpha(100)
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Expanded(
-                                        child: Center(
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                if (videoPlayerController!.value.isPlaying) {
-                                                  videoPlayerController!.pause();
-                                                } else {
-                                                  videoPlayerController!.play();
-                                                }
-                                              });
-                                            },
-                                            child: videoPlayerController!.value.isPlaying 
-                                            ? Icon(
-                                                Icons.pause, 
-                                                size: 65, 
-                                                color: Colors.white
-                                              ) 
-                                            : Icon(
-                                                Icons.play_arrow, 
-                                                size: 65, 
-                                                color: Colors.white
-                                              ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-                                        child: Row(
-                                          spacing: 10,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              convertDurationToString(videoPlayerController!.value.position),
-                                              style: TextStyle(
-                                                color: Colors.white
-                                              ),  
-                                            ),
-                                            Expanded(
-                                              child: Column(
-                                                children: [
-                                                  VideoProgressIndicator(videoPlayerController!, allowScrubbing: true),
-                                                  SizedBox(height: 4)
-                                                ],
-                                              )
-                                            ),
-                                            Text(
-                                              convertDurationToString(videoPlayerController!.value.duration),
-                                              style: TextStyle(
-                                                color: Colors.white
-                                              ),  
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              )
-                            )
-                          : SizedBox()
-                        ]
-                      ) 
-                    : Center(
-                        child: CircularProgressIndicator(color: Colors.blue)
-                      );
+                    return VideoPlayerComponent(
+                      videoId: widget.video.id,
+                      duration: widget.video.duration,
+                      history: widget.video.history,
+                      video: widget.video.video,
+                    );
                   }) 
                 ),
               ),
