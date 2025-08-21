@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:video_app/components/bottom_sheet_component.dart';
 import 'package:video_app/components/profile_image_component.dart';
 import 'package:video_app/constants/env.dart';
 import 'package:video_app/controllers/profile_controller.dart';
@@ -20,49 +21,23 @@ class CommentItemComponent extends StatelessWidget {
     showModalBottomSheet(
       context: context, 
       builder: (context) {
-        return Container(
-          padding: EdgeInsets.symmetric(vertical: 5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5)
-          ),
-          child: Wrap(
-            children: [
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  Get.back();
-                  if (onDelete != null) onDelete!();
-                },
-                child: Padding(
-                  padding: EdgeInsetsGeometry.symmetric(vertical: 5, horizontal: 10),
-                  child: Row(
-                    spacing: 10,
-                    children: [
-                      Icon(Icons.delete),
-                      Text('Hapus')
-                    ],
-                  ),  
-                ),
-              ),
-              GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  Get.back();
-                  if (onEdit != null) onEdit!();
-                },
-                child: Padding(
-                  padding: EdgeInsetsGeometry.symmetric(vertical: 5, horizontal: 10),
-                  child: Row(
-                    spacing: 10,
-                    children: [
-                      Icon(Icons.edit),
-                      Text('Edit')
-                    ],
-                  ),  
-                ),
-              )
-            ],
-          ),
+        return BottomSheetComponent(
+          menus: [
+            BottomSheetMenuModel(
+              icon: Icons.edit, 
+              onTap: () {
+                if (onEdit != null) onEdit!(); 
+              }, 
+              title: "Edit komentar"
+            ),
+            BottomSheetMenuModel(
+              icon: Icons.delete, 
+              onTap: () {
+                if (onDelete != null) onDelete!(); 
+              }, 
+              title: "Hapus komentar"
+            ),
+          ]
         );
       }
     );

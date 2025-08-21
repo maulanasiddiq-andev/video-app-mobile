@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:video_app/components/bottom_sheet_component.dart';
 import 'package:video_app/components/profile_image_component.dart';
-import 'package:video_app/components/video_option_bottom_sheet.dart';
 import 'package:video_app/constants/env.dart';
+import 'package:video_app/controllers/profile_controller.dart';
+import 'package:video_app/controllers/video_controller.dart';
 import 'package:video_app/models/video_model.dart';
 import 'package:video_app/pages/videos/video_detail_page.dart';
+import 'package:video_app/pages/videos/video_edit_page.dart';
 import 'package:video_app/utils/convert_duration.dart';
 
 class VideoItemComponent extends StatefulWidget {
@@ -22,6 +25,8 @@ class VideoItemComponent extends StatefulWidget {
 }
 
 class _VideoItemComponentState extends State<VideoItemComponent> {
+  final VideoController videoController = Get.find<VideoController>();
+  final ProfileController profileController = Get.find<ProfileController>();
   final String uri = ApiPoint.baseUrl;
   late final bool imageExist;
   late final Duration duration;
@@ -46,10 +51,100 @@ class _VideoItemComponentState extends State<VideoItemComponent> {
     viewText = viewCount > 0 ? 'views' : 'view';
   }
 
+  void openConfirmDelete() async {
+    final result = await Get.dialog(
+      Dialog(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 15, 20, 10),
+          child: Wrap(
+            children: [
+              Text.rich(
+                TextSpan(
+                  style: TextStyle(
+                    fontSize: 15
+                  ),
+                  children: [
+                    TextSpan(
+                      text: 'Apakah anda yakin ingin menghapus video "',
+                    ),
+                    TextSpan(
+                      text: widget.video.title,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold
+                      )
+                    ),
+                    TextSpan(
+                      text: '"?'
+                    )
+                  ]
+                )
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Get.back(result: true);
+                    }, 
+                    child: Text(
+                      'Ya',
+                      style: TextStyle(
+                        color: Colors.blue,
+                      ),
+                    )
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Get.back(result: false);
+                    }, 
+                    child: Text(
+                      'Batal',
+                      style: TextStyle(
+                        color: Colors.red
+                      ),
+                    )
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      )
+    );
+
+    if (result == true) {
+      videoController.deleteVideo(widget.video.id);
+    }
+  }
+
   void _showOptions(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      builder: (context) => VideoOptionBottomSheet(video: widget.video),
+      builder: (context) => BottomSheetComponent(
+        menus: [
+          BottomSheetMenuModel(
+            icon: Icons.edit, 
+            onTap: () {
+              Get.to(() => VideoEditPage(video: widget.video));
+            }, 
+            title: "Edit video",
+            isVisible: widget.video.userId == profileController.user.value?.id
+          ),
+          BottomSheetMenuModel(
+            icon: Icons.delete, 
+            onTap: () {
+              openConfirmDelete();
+            }, 
+            title: "Hapus video",
+            isVisible: widget.video.userId == profileController.user.value?.id
+          ),
+          BottomSheetMenuModel(
+            icon: Icons.timelapse, 
+            onTap: () {}, 
+            title: "Tonton nanti",
+          ),
+        ]
+      ),
     );
   }
 
