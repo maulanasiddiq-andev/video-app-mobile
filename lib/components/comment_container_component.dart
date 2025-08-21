@@ -37,7 +37,9 @@ class _CommentContainerComponentState extends State<CommentContainerComponent> {
 
     scrollController.addListener(() {
       if (scrollController.position.pixels >= scrollController.position.maxScrollExtent - 10) {
-        videoDetailController.loadMoreComment();
+        if (!videoDetailController.isLoadingComments.value && !videoDetailController.isLoadingMoreComments.value) {
+          videoDetailController.getComments(widget.video.id);
+        }
       }
     });
   }
@@ -73,7 +75,7 @@ class _CommentContainerComponentState extends State<CommentContainerComponent> {
         children: [
           Expanded(
             child: Obx(() {
-              if (videoDetailController.isLoadingComment.value) {
+              if (videoDetailController.isLoadingComments.value) {
                 return Center(
                   child: CircularProgressIndicator(color: Colors.blue),
                 ); 
