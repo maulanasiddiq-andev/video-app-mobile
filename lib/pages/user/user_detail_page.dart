@@ -2,16 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_app/components/comment_item_component.dart';
 import 'package:video_app/components/profile_image_component.dart';
-import 'package:video_app/components/video_component.dart';
+import 'package:video_app/components/video_item_component.dart';
 import 'package:video_app/controllers/user_detail_controller.dart';
 import 'package:video_app/models/user_model.dart';
 
 class UserDetailPage extends StatefulWidget {
   final UserModel user;
-  const UserDetailPage({
-    super.key,
-    required this.user
-  });
+  const UserDetailPage({super.key, required this.user});
 
   @override
   State<UserDetailPage> createState() => _UserDetailPageState();
@@ -60,12 +57,7 @@ class _UserDetailPageState extends State<UserDetailPage> with SingleTickerProvid
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(
-          widget.user.name,
-          style: TextStyle(
-            color: Colors.white
-          ),
-        ),
+        title: Text(widget.user.name, style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
       ),
@@ -91,15 +83,15 @@ class _UserDetailPageState extends State<UserDetailPage> with SingleTickerProvid
                             widget.user.name,
                             style: TextStyle(
                               fontSize: 18,
-                              fontWeight: FontWeight.bold
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           Obx(() {
                             var count = userDetailController.videosCount;
                             return Text("$count video");
-                          })
+                          }),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -115,73 +107,62 @@ class _UserDetailPageState extends State<UserDetailPage> with SingleTickerProvid
                     tabs: [
                       Tab(text: "Video"),
                       Tab(text: "Komentar"),
-                    ]
-                  )
-                )
-              )
+                    ],
+                  ),
+                ),
+              ),
             ];
-          }, 
+          },
           body: TabBarView(
             controller: tabController,
             children: [
               Obx(() {
                 if (userDetailController.isLoadingVideos.value) {
                   return Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.blue,
-                    ),
+                    child: CircularProgressIndicator(color: Colors.blue),
                   );
                 }
 
                 if (userDetailController.videos.isEmpty) {
-                  return Center(
-                    child: Text('Belum ada video'),
-                  );
+                  return Center(child: Text('Belum ada video'));
                 }
-        
+
                 return ListView.builder(
                   controller: videoScrollController,
                   itemCount: userDetailController.videos.length,
                   itemBuilder: (context, index) {
                     var video = userDetailController.videos[index];
-        
-                    return VideoComponent(
-                      video: video, 
-                      goToDetail: () {}
-                    );
-                  }
+
+                    return VideoItemComponent(video: video, goToDetail: () {});
+                  },
                 );
               }),
               Obx(() {
                 if (userDetailController.isLoadingComments.value) {
                   return Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.blue,
-                    ),
+                    child: CircularProgressIndicator(color: Colors.blue),
                   );
                 }
 
                 if (userDetailController.comments.isEmpty) {
-                  return Center(
-                    child: Text('Belum ada comment'),
-                  );
+                  return Center(child: Text('Belum ada comment'));
                 }
-        
+
                 return ListView.builder(
                   padding: EdgeInsets.only(top: 10),
                   controller: commentScrollController,
                   itemCount: userDetailController.comments.length,
                   itemBuilder: (context, index) {
                     var comment = userDetailController.comments[index];
-        
+
                     return CommentItemComponent(comment: comment);
-                  }
+                  },
                 );
               }),
-            ]
-          )
+            ],
+          ),
         ),
-      )
+      ),
     );
   }
 }
@@ -197,11 +178,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => tabBar.preferredSize.height;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      color: Colors.white,
-      child: tabBar,
-    );
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent,) {
+    return Container(color: Colors.white, child: tabBar);
   }
 
   @override

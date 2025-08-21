@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:video_app/components/video_component.dart';
+import 'package:video_app/components/video_item_component.dart';
 import 'package:video_app/controllers/video_detail_controller.dart';
 
 class SuggestedVideosContainer extends StatelessWidget {
@@ -16,7 +16,7 @@ class SuggestedVideosContainer extends StatelessWidget {
       child: Obx(() {
         if (videoDetailController.isLoadingSuggestedVideos.value) {
           return Shimmer.fromColors(
-            baseColor: Colors.grey.shade300, 
+            baseColor: Colors.grey.shade300,
             highlightColor: Colors.grey.shade100,
             child: Column(
               spacing: 10,
@@ -24,7 +24,7 @@ class SuggestedVideosContainer extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   color: Colors.grey,
-                  child: AspectRatio(aspectRatio: 16/9),
+                  child: AspectRatio(aspectRatio: 16 / 9),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -37,40 +37,31 @@ class SuggestedVideosContainer extends StatelessWidget {
                         height: 30,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
-                          color: Colors.grey
+                          color: Colors.grey,
                         ),
                       ),
                       Expanded(
                         child: Column(
                           spacing: 10,
                           children: [
-                            Container(
-                              height: 16,
-                              color: Colors.grey,
-                            ),
-                            Container(
-                              height: 16,
-                              color: Colors.grey,
-                            ),
+                            Container(height: 16, color: Colors.grey),
+                            Container(height: 16, color: Colors.grey),
                           ],
-                        )
-                      )
+                        ),
+                      ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
-          );  
+          );
         }
 
         return Column(
           children: [
             ...videoDetailController.suggestedVideos.map((video) {
-              return VideoComponent(
-                video: video, 
-                goToDetail: () {},
-              );
-            })
+              return VideoItemComponent(video: video, goToDetail: () {});
+            }),
           ],
         );
       }),

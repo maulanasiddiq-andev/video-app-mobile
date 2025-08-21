@@ -7,21 +7,21 @@ import 'package:video_app/models/video_model.dart';
 import 'package:video_app/pages/videos/video_detail_page.dart';
 import 'package:video_app/utils/convert_duration.dart';
 
-class VideoComponent extends StatefulWidget {
+class VideoItemComponent extends StatefulWidget {
   final VideoModel video;
   final Function goToDetail;
 
-  const VideoComponent({
-    super.key, 
+  const VideoItemComponent({
+    super.key,
     required this.video,
-    required this.goToDetail  
+    required this.goToDetail,
   });
 
   @override
-  State<VideoComponent> createState() => _VideoComponentState();
+  State<VideoItemComponent> createState() => _VideoItemComponentState();
 }
 
-class _VideoComponentState extends State<VideoComponent> {
+class _VideoItemComponentState extends State<VideoItemComponent> {
   final String uri = ApiPoint.baseUrl;
   late final bool imageExist;
   late final Duration duration;
@@ -48,8 +48,8 @@ class _VideoComponentState extends State<VideoComponent> {
 
   void _showOptions(BuildContext context) {
     showModalBottomSheet(
-      context: context, 
-      builder: (context) => VideoOptionBottomSheet(video: widget.video)
+      context: context,
+      builder: (context) => VideoOptionBottomSheet(video: widget.video),
     );
   }
 
@@ -64,17 +64,17 @@ class _VideoComponentState extends State<VideoComponent> {
         children: [
           Container(
             width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.grey[100]
-            ),
+            decoration: BoxDecoration(color: Colors.grey[100]),
             child: AspectRatio(
-              aspectRatio: 16/9,
+              aspectRatio: 16 / 9,
               child: Stack(
                 children: [
                   Center(
-                    child: imageExist ? 
-                      Image(image: NetworkImage('$uri${widget.video.image!}')) :
-                      Image(image: AssetImage('assets/images/mobil.jfif')),
+                    child: imageExist
+                        ? Image(
+                            image: NetworkImage('$uri${widget.video.image!}'),
+                          )
+                        : Image(image: AssetImage('assets/images/mobil.jfif')),
                   ),
                   Positioned(
                     bottom: 0,
@@ -90,31 +90,36 @@ class _VideoComponentState extends State<VideoComponent> {
                               padding: EdgeInsetsDirectional.all(5),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(3),
-                                color: Colors.black
+                                color: Colors.black,
                               ),
                               margin: EdgeInsets.only(right: 5, bottom: 5),
                               child: Text(
-                                (widget.video.duration?.isNotEmpty ?? false) ? widget.video.duration! : '00:00',
-                                style: TextStyle(
-                                  color: Colors.white
-                                ),
+                                (widget.video.duration?.isNotEmpty ?? false)
+                                    ? widget.video.duration!
+                                    : '00:00',
+                                style: TextStyle(color: Colors.white),
                               ),
                             ),
                           ],
                         ),
                         Container(
                           height: 5,
-                          width: (position.inMicroseconds / duration.inMicroseconds).isNaN
-                            ? 0
-                            : MediaQuery.of(context).size.width * (position.inMicroseconds / duration.inMicroseconds),
+                          width:
+                              (position.inMicroseconds /
+                                      duration.inMicroseconds)
+                                  .isNaN
+                              ? 0
+                              : MediaQuery.of(context).size.width *
+                                    (position.inMicroseconds /
+                                        duration.inMicroseconds),
                           color: Colors.red,
-                        )
+                        ),
                       ],
-                    )
-                  )
+                    ),
+                  ),
                 ],
-              )
-            )
+              ),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -134,7 +139,10 @@ class _VideoComponentState extends State<VideoComponent> {
                     children: [
                       Text(
                         widget.video.title,
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Text('$name | $viewCount $viewText'),
                     ],
@@ -145,7 +153,7 @@ class _VideoComponentState extends State<VideoComponent> {
                     _showOptions(context);
                   },
                   child: Icon(Icons.more_vert),
-                )
+                ),
               ],
             ),
           ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:video_app/components/video_component.dart';
+import 'package:video_app/components/video_item_component.dart';
 import 'package:video_app/controllers/video_controller.dart';
 import 'package:video_app/pages/user/user_detail_page.dart';
 import 'package:video_app/pages/videos/video_create_page.dart';
@@ -38,7 +38,7 @@ class _VideoListPageState extends State<VideoListPage> {
           IconButton(
             onPressed: () {},
             icon: Icon(Icons.search, color: Colors.white),
-          )
+          ),
         ],
       ),
       body: RefreshIndicator(
@@ -67,31 +67,28 @@ class _VideoListPageState extends State<VideoListPage> {
                         Icon(Icons.add, color: Colors.blue),
                         Text(
                           'Buat video',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 16
-                          ),
-                        )
+                          style: TextStyle(color: Colors.blue, fontSize: 16),
+                        ),
                       ],
                     ),
                   ),
                 ),
                 ...videos.map((video) {
-                  return VideoComponent(
+                  return VideoItemComponent(
                     video: video,
-                    goToDetail: () => Get.to(() => UserDetailPage(user: video.user!)),  
+                    goToDetail: () => Get.to(() => UserDetailPage(user: video.user!)),
                   );
                 }),
                 Obx(() {
                   var isLoadingMore = videoController.isLoadingMore.value;
 
-                  return isLoadingMore ?
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Center(child: CircularProgressIndicator()),
-                    ) :
-                    SizedBox();
-                })
+                  return isLoadingMore
+                      ? Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Center(child: CircularProgressIndicator()),
+                        )
+                      : SizedBox();
+                }),
               ],
             ),
           );
