@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_app/components/bottom_sheet_component.dart';
+import 'package:video_app/components/dialog_container_component.dart';
 import 'package:video_app/components/profile_image_component.dart';
 import 'package:video_app/constants/env.dart';
 import 'package:video_app/controllers/profile_controller.dart';
@@ -54,61 +55,41 @@ class _VideoItemComponentState extends State<VideoItemComponent> {
   void openConfirmDelete() async {
     final result = await Get.dialog(
       Dialog(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 15, 20, 10),
-          child: Wrap(
-            children: [
-              Text.rich(
-                TextSpan(
-                  style: TextStyle(
-                    fontSize: 15
-                  ),
-                  children: [
-                    TextSpan(
-                      text: 'Apakah anda yakin ingin menghapus video "',
-                    ),
-                    TextSpan(
-                      text: widget.video.title,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold
-                      )
-                    ),
-                    TextSpan(
-                      text: '"?'
-                    )
-                  ]
-                )
+        child: DialogContainerComponent(
+          message: Text.rich(
+            TextSpan(
+              style: TextStyle(
+                fontSize: 17
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Get.back(result: true);
-                    }, 
-                    child: Text(
-                      'Ya',
-                      style: TextStyle(
-                        color: Colors.blue,
-                      ),
-                    )
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Get.back(result: false);
-                    }, 
-                    child: Text(
-                      'Batal',
-                      style: TextStyle(
-                        color: Colors.red
-                      ),
-                    )
-                  ),
-                ],
-              )
-            ],
-          ),
-        ),
+              children: [
+                TextSpan(
+                  text: 'Apakah anda yakin ingin menghapus video "',
+                ),
+                TextSpan(
+                  text: widget.video.title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold
+                  )
+                ),
+                TextSpan(
+                  text: '"?'
+                )
+              ]
+            )
+          ), 
+          responses: [
+            DialogResponseModel(
+              title: "Ya", 
+              response: () => Get.back(result: true), 
+              color: Colors.red
+            ),
+            DialogResponseModel(
+              title: "Tidak", 
+              response: () => Get.back(result: false), 
+              color: Colors.blue
+            ),
+          ]
+        )
       )
     );
 
